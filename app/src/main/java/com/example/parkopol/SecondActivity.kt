@@ -40,7 +40,7 @@ class SecondActivity : AppCompatActivity() {
             headerBinding.imieNazwisko.text = signInAccount.displayName
             headerBinding.adresEmail.text = signInAccount.email
         }
-
+//    jb300
 
 //
 //        binding.wyloguj.setOnClickListener {
