@@ -14,47 +14,18 @@
       },
       "oauth_client": [
         {
+          "client_id": "806514245750-ap41bqdh5rspp50v1esva8o10agtf5dp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.parkopol",
+            "certificate_hash": "a7acf28c90e07ac3079cfacc4836a6391c268102"
+          }
+        },
+        {
           "client_id": "806514245750-h9bujtcocqbj8v8pcge4dh7mpn11c60f.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.parkopol",
-            "certificate_hash": "02d434713c01633210cef57c1552cb248c86fefa"
-          }
-        },
-        {
-          "client_id": "806514245750-28p91me3nqukviver4hthdo9mjbt8gsm.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAd9bBjcchCOnawolvM-417bl5Iv383Uv0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "806514245750-28p91me3nqukviver4hthdo9mjbt8gsm.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:806514245750:android:9758487bd428e6a4f69f57",
-        "android_client_info": {
-          "package_name": "com.example.pierwszaaplikacja"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "806514245750-0gcgt2b7m76k65i7datsbnss1f0bo3fe.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.pierwszaaplikacja",
             "certificate_hash": "02d434713c01633210cef57c1552cb248c86fefa"
           }
         },
