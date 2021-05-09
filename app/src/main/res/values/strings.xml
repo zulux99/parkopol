@@ -3,6 +3,6 @@
     <string name="przywitanie">Dzień dobry, witaj</string>
     <string name="zalogujPrzezGoogle">Zaloguj przez Google</string>
     <string name="zarejestruj">Zarejestruj się</string>
-    <string name="navigation_drawer_openn">Otwórz menu nawigacji</string>
+    <string name="navigation_drawer_open">Otwórz menu nawigacji</string>
     <string name="navigation_drawer_close">Otwórz menu nawigacji</string>
 </resources>
