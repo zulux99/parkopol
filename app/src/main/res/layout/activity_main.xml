@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#32000000"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:orientation="vertical">
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
@@ -17,6 +16,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="100dp"
         android:textAlignment="center" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/cardview_dark_background"
+        android:theme="@style/Theme.AppCompat"
+        app:popupTheme="@style/Theme.AppCompat" />
 
 
 </RelativeLayout>

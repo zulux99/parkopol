@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.parkopol.SecondActivity"
-    tools:openDrawer="start">
+    tools:context="com.example.parkopol.SecondActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +26,8 @@
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#222"/>
+            android:background="#222">
+        </FrameLayout>
     </LinearLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
@@ -39,21 +39,4 @@
         app:itemTextColor="@color/white"
         app:itemIconTint="@color/white"
         android:background="#222"/>
-        <TextView
-            android:id="@+id/userMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="#0F0"
-            android:textAlignment="center"
-            android:layout_margin="20dp"
-            android:text="TextView" />
-
-
-    <!--        <Button-->
-<!--            android:id="@+id/wyloguj"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Wyloguj" />-->
 </androidx.drawerlayout.widget.DrawerLayout>
