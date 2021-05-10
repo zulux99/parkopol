@@ -36,6 +36,8 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/lewy_sidebar"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
         android:background="#222"/>
         <TextView
             android:id="@+id/userMessage"
@@ -48,7 +50,8 @@
             android:layout_margin="20dp"
             android:text="TextView" />
 
-<!--        <Button-->
+
+    <!--        <Button-->
 <!--            android:id="@+id/wyloguj"-->
 <!--            android:layout_width="wrap_content"-->
 <!--            android:layout_height="wrap_content"-->
