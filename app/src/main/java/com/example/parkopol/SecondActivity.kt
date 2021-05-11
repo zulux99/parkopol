@@ -15,6 +15,12 @@ import com.example.parkopol.databinding.FragmentKontoBinding
 import com.example.parkopol.databinding.NavHeaderBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -55,6 +61,7 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 //        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, KontoFragment()).commit()
 //        navigationView.setCheckedItem(R.id.nav_konto)
     }
+
     override fun onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
@@ -64,6 +71,11 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.nav_mapa -> {
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MapaFragment()).commit()
+                drawer.closeDrawer(GravityCompat.START)
+                return true
+            }
             R.id.nav_logout -> {
                 Firebase.auth.signOut()
                 val intent = Intent(this, MainActivity::class.java)
@@ -89,17 +101,5 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             else -> return super.onOptionsItemSelected(item)
         }
     }
-//    private fun deleteUser() {
-//        Log.d("komunikat", "odp")
-//        // [START delete_user]
-////        val user = Firebase.auth.currentUser!!
-//
-////        user.delete().addOnCompleteListener { task ->
-////                if (task.isSuccessful) {
-////                    Log.d("komunikat", "User account deleted.")
-////                }
-////            }
-//        // [END delete_user]
-//    }
 }
 

@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class KontoFragment : Fragment() {
     override fun onCreateView(
@@ -22,10 +24,11 @@ class KontoFragment : Fragment() {
         button.setOnClickListener {
             Log.d("komunikat", "1")
             deleteUser()
+            Firebase.auth.signOut()
+//            TODO: po dwukrotnym usunięciu i zalogowaniu się crashuje
         }
         return myView
     }
-
     private fun deleteUser() {
         FirebaseAuth.getInstance().currentUser!!.delete().addOnSuccessListener {
             Log.d("komunikat", "Usunięto")

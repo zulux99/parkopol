@@ -36,16 +36,16 @@ class MainActivity : AppCompatActivity() {
             signIn()
         }
         auth = Firebase.auth
-        }
+    }
         private fun signIn() {
+
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
         override fun onStart() {
             super.onStart()
-            // Check if user is signed in (non-null) and update UI accordingly.
-            val currentUser = auth.currentUser
-            if (currentUser != null){
+// Check if user is signed in (non-null) and update UI accordingly.
+            if (Firebase.auth.currentUser != null) {
                 Log.d("komunikat", "Użytkownik wciąż zalogowany")
                 val intent = Intent(this, SecondActivity::class.java)
                 startActivity(intent)
