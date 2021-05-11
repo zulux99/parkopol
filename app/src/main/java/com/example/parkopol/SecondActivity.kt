@@ -24,12 +24,12 @@ import com.squareup.picasso.Picasso
 class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var drawer: DrawerLayout
     private lateinit var binding: ActivitySecondBinding
-    private lateinit var fragmentKontoBinding: FragmentKontoBinding
+//    private lateinit var fragmentKontoBinding: FragmentKontoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySecondBinding.inflate(layoutInflater)
         val headerBinding = NavHeaderBinding.bind(binding.navView.getHeaderView(0))
-        fragmentKontoBinding = FragmentKontoBinding.inflate(layoutInflater)
+//        fragmentKontoBinding = FragmentKontoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val signInAccount: GoogleSignInAccount? = GoogleSignIn.getLastSignedInAccount(this)
         drawer = binding.drawerLayout
@@ -44,6 +44,10 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             Log.d("komunikat", "google avatar url: " + signInAccount.photoUrl.toString())
             Picasso.get().load(signInAccount.photoUrl.toString()).into(headerBinding.navAvatar)
         }
+//        fragmentKontoBinding.kontoUsun.setOnClickListener {
+//            Log.d("komunikat", "listener działa")
+//            deleteUser()
+//        }
         val navigationView = binding.navView
         navigationView.bringToFront()
         navigationView.setNavigationItemSelectedListener(this)
@@ -85,5 +89,17 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             else -> return super.onOptionsItemSelected(item)
         }
     }
+//    private fun deleteUser() {
+//        Log.d("komunikat", "odp")
+//        // [START delete_user]
+////        val user = Firebase.auth.currentUser!!
+//
+////        user.delete().addOnCompleteListener { task ->
+////                if (task.isSuccessful) {
+////                    Log.d("komunikat", "User account deleted.")
+////                }
+////            }
+//        // [END delete_user]
+//    }
 }
 

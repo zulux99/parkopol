@@ -5,39 +5,38 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.example.parkopol.databinding.FragmentKontoBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class KontoFragment: Fragment() {
-    private lateinit var binding: FragmentKontoBinding
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
 
     ): View? {
-        binding = FragmentKontoBinding.inflate(layoutInflater)
-        binding.kontoUsun.setOnClickListener{
-            deleteUser()
+        var myView = inflater.inflate(R.layout.fragment_konto, container, false)
+        var btn_test = myView.findViewById(R.id.konto_usun) as Button
+        btn_test.setOnClickListener {
             Log.d("komunikat", "1")
         }
-        return inflater.inflate(R.layout.fragment_konto, container, false)
+        return myView
     }
 
     private fun deleteUser() {
         Log.d("komunikat", "odp")
         // [START delete_user]
-        val user = Firebase.auth.currentUser!!
-
-        user.delete()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("komunikat", "User account deleted.")
-                }
-            }
+//        val user = Firebase.auth.currentUser!!
+//
+//        user.delete()
+//            .addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    Log.d("komunikat", "User account deleted.")
+//                }
+//            }
         // [END delete_user]
     }
 
