@@ -27,6 +27,11 @@ class KontoFragment : Fragment() {
             Firebase.auth.signOut()
 //            TODO: po dwukrotnym usunięciu i zalogowaniu się crashuje
         }
+        val nowyParkingbutton = myView.findViewById(R.id.nowyParking) as Button
+        nowyParkingbutton.setOnClickListener {
+            Log.d("komunikat", "nowyParking0")
+            nowyParking()
+        }
         return myView
     }
     private fun deleteUser() {
@@ -37,5 +42,11 @@ class KontoFragment : Fragment() {
         }.addOnFailureListener {
             Log.d("komunikat", "Nie udało się usunąć")
         }
+    }
+
+    private  fun nowyParking(){
+
+        Log.d("komunikat", "nowyParking")
+
     }
 }
