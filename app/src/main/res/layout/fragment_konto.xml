@@ -22,8 +22,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="172dp"
-        android:layout_marginBottom="383dp"
+        android:layout_marginEnd="194dp"
+        android:layout_marginBottom="376dp"
         android:text="Zgłoś swój parking"
         tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/nowyParking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="444dp"
+        android:layout_marginEnd="212dp"
+        android:text="Nowy parking" />
+
 </RelativeLayout>
