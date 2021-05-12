@@ -99,6 +99,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         val latLng = LatLng(currentLatitude, currentLongitude)
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 21f))
+        
     }
 //    private fun zoomMyCuurentLocation() {
 //        Log.d("komunikat", "Błąd 1")

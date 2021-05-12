@@ -10,7 +10,9 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
+
 
 class KontoFragment : Fragment() {
     override fun onCreateView(
@@ -43,9 +45,19 @@ class KontoFragment : Fragment() {
             Log.d("komunikat", "Nie udało się usunąć")
         }
     }
+    data class miejsceParkingowe(val stan: Boolean? = false, val idwlasciciela: String? = null) {
+        // Null default values create a no-argument default constructor, which is needed
+        // for deserialization from a DataSnapshot.
+    }
 
     private  fun nowyParking(){
+        val database = FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+        val myRef = database.getReference("MiejsceParkingowe")
+    val miejscePar = miejsceParkingowe(false,"007")
+        //myRef.setValue(miejscePar)
+        database.getReference("MiejsceParkingowe").child("1").setValue(miejscePar)
 
+        database.getReference("MiejsceParkingowe").child("2").setValue(miejscePar)
         Log.d("komunikat", "nowyParking")
 
     }
