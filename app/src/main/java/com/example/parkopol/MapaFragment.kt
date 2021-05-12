@@ -106,7 +106,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
         }
-        val location: Location? = locationManager!!.getLastKnownLocation(
+        val location: Location? = locationManager.getLastKnownLocation(
             locationManager.getBestProvider(
                 criteria,
                 false
