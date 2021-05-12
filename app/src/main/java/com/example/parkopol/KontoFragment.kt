@@ -14,6 +14,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 
 
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class KontoFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,19 +46,18 @@ class KontoFragment : Fragment() {
             Log.d("komunikat", "Nie udało się usunąć")
         }
     }
-    data class miejsceParkingowe(val stan: Boolean? = false, val idwlasciciela: String? = null) {
-        // Null default values create a no-argument default constructor, which is needed
-        // for deserialization from a DataSnapshot.
+    data class miejsceParkingowe(val stan: Boolean? = false,val mNiPelSprawnych: Boolean = false, val idwlasciciela: String, val szerokosc: String, val wysokosc: String,val cena: Double? = null){
+
     }
 
     private  fun nowyParking(){
         val database = FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
-        val myRef = database.getReference("MiejsceParkingowe")
-    val miejscePar = miejsceParkingowe(false,"007")
-        //myRef.setValue(miejscePar)
-        database.getReference("MiejsceParkingowe").child("1").setValue(miejscePar)
+      //  val myRef = database.getReference("MiejsceParkingowe")
 
-        database.getReference("MiejsceParkingowe").child("2").setValue(miejscePar)
+        //myRef.setValue(miejscePar)
+        database.getReference("MiejsceParkingowe").child("1").setValue(miejsceParkingowe(false,false,FirebaseAuth.getInstance().currentUser.uid,"51.7919374642711","16.869667087783448" ))
+
+        database.getReference("MiejsceParkingowe").child("2").setValue(miejsceParkingowe(true,false,FirebaseAuth.getInstance().currentUser.uid,"51.7919374642000","16.869667087783000",1.2))
         Log.d("komunikat", "nowyParking")
 
     }
