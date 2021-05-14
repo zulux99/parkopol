@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
@@ -18,6 +19,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 import java.io.IOException
 
 
@@ -46,7 +49,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         getLastKnownLocation()
         buttonMapaZlokalizuj.setOnClickListener {
             Log.d("komunikat", "Pobieram lokalizację")
-//            TODO: naprawić funkcję
+            wyswietlDostepneMiejscaParkingowe()
+//            TODO(naprawić funkcję)
 //            zoomMyCuurentLocation()
         }
         return view
@@ -195,10 +199,44 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
             gps[0] = location.latitude
             gps[1] = location.longitude
             aktualnaLokalizacja = LatLng(gps[0], gps[1])
-            Log.e("komunikat",gps[0].toString())
-            Log.e("komunikat",gps[1].toString())
+            Log.d("komunikat",gps[0].toString())
+            Log.d("komunikat",gps[1].toString())
         }
     return
+    }
+    private fun wyswietlDostepneMiejscaParkingowe() {
+        val database =
+            FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+        val myRef = database.getReference("MiejsceParkingowe/").orderByChild("lokalizacja")
+        myRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    var lat: Double
+                    var lng: Double
+                    var position: LatLng
+                    for (spotLatLng: DataSnapshot in dataSnapshot.children) {
+                        lat = spotLatLng.child("lokalizacja/latitude/").value.toString().toDouble()
+                        lng = spotLatLng.child("lokalizacja/longitude/").value.toString().toDouble()
+                        position = LatLng(lat, lng)
+                        Log.d("baza", "Lat: ${position.latitude} Lng: ${position.longitude}")
+//                        TODO:    DODAĆ MARKER, CRASHUJE
+//                        mMap.addMarker(MarkerOptions().position(position).title("Miejsce parkingowe"))
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+//                TODO "Not yet implemented"
+            }
+        })
+//        myRef.get().addOnSuccessListener {
+//            val latitude = it.child("latitude")
+//            val longitude = it.child("longitude")
+////            mMap?.addMarker(MarkerOptions().position(latitude, longitude).title(showroomAddresses[i]))
+//            Log.d("bazadanych", "Got value $latitude")
+//        }.addOnFailureListener {
+//            Log.d("bazadanych", "Error getting data", it)
+//        }
     }
     //    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
