@@ -7,11 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 
 class KontoFragment : Fragment() {
@@ -21,8 +26,13 @@ class KontoFragment : Fragment() {
         savedInstanceState: Bundle?
 
     ): View? {
+
+
         val myView = inflater.inflate(R.layout.fragment_konto, container, false)
         val button = myView.findViewById(R.id.konto_usun) as Button
+        val inputLokalicacja1 = myView.findViewById(R.id.Lokalizacja_1) as EditText
+        val inputLokalicacja2 = myView.findViewById(R.id.lokalicacja2) as EditText
+        val niepelnosprawni= myView.findViewById(R.id.kontoCheckBoxNiePS) as CheckBox
         button.setOnClickListener {
             Log.d("komunikat", "1")
             deleteUser()
@@ -32,7 +42,11 @@ class KontoFragment : Fragment() {
         val nowyParkingbutton = myView.findViewById(R.id.nowyParking) as Button
         nowyParkingbutton.setOnClickListener {
             Log.d("komunikat", "nowyParking0")
-            nowyParking()
+            nowyParking(
+                inputLokalicacja1.text.toString().toDouble(),
+                inputLokalicacja2.text.toString().toDouble(),
+                niepelnosprawni.isChecked
+            )
         }
         return myView
     }
@@ -68,43 +82,58 @@ class KontoFragment : Fragment() {
 
     }
 
-    private fun nowyParking() {
+    private fun nowyParking(
+        inputLokalicacja1: Double,
+        inputLokalicacja2: Double,
+        niepelnosprawni: Boolean
+    ) {
+val lokalicajca = LatLng(inputLokalicacja1, inputLokalicacja2)
         val TAG = "baza"
+      var koniec: Boolean= true
         val database =
         FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
         val myRef = database.getReference("MiejsceParkingowe")
 
+            database.getReference("MiejsceParkingowe/").
+            orderByChild("lokalizacja").
+            addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    var lat: Double
+                    var lng: Double
+                    var position: LatLng
+                    for (spotLatLng: DataSnapshot in dataSnapshot.children) {
+                        lat = spotLatLng.child("lokalizacja/latitude/").value.toString().toDouble()
+                        lng = spotLatLng.child("lokalizacja/longitude/").value.toString().toDouble()
+                        position = LatLng(lat, lng)
+
+                      if(lokalicajca==position){
+                          Log.e("baza", "PROBLEM asdaasdasdLat: ${position.latitude} Lng: ${position.longitude}")
+                        koniec= false
+
+                                          }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+//                TODO "Not yet implemented"
+            }
+        })
+
+
+
         //myRef.setValue(miejscePar)
-        val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
-        myRef.child(id.toString()).setValue(
-            MiejsceParkingowe(
-                false, false, FirebaseAuth.getInstance().currentUser!!.uid,
-                LatLng(51.7919374642711, 16.869667087783448)
-            )
-        )
-        //database.getReference("MiejsceParkingowe").child("2").setValue(MiejsceParkingowe(true,false,FirebaseAuth.getInstance().currentUser.uid,LatLng(51.7919374642000,16.869667087783000 ),1.2))
-        Log.d("bazadanych", "nowyParking")
-
-        myRef.get().addOnSuccessListener {
-            val test = it.child("idwlasciciela")
-            Log.d("bazadanych", "Got value ${test}  ++===++,${it.value}")
-        }.addOnFailureListener {
-            Log.d("bazadanych", "Error getting data", it)
-        }
+           if(koniec) {
+                val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
+                myRef.child(id.toString()).setValue(
+                    MiejsceParkingowe(
+                        false, niepelnosprawni, FirebaseAuth.getInstance().currentUser!!.uid,
+                        lokalicajca
+                    )
+                )
+            }
 
 
-        val key = database.getReference("MiejsceParkingowe").push().key
-        if (key == null) {
-            Log.d("bazadanych", "Couldn't get push key for posts")
-
-        } else {
-            val test = MiejsceParkingowe(
-                true, false, FirebaseAuth.getInstance().currentUser!!.uid,
-                LatLng(51.7919374642000, 16.869667087783000)
-            )
-// myRef.child("1").setValue(null) usuwanie
-            // myRef.setValue( test)
-            // myRef.child("2").child("cena").setValue(20)
-        }
     }
 }
