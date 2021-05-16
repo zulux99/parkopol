@@ -87,7 +87,7 @@ class KontoFragment : Fragment() {
         inputLokalicacja2: Double,
         niepelnosprawni: Boolean
     ) {
-val lokalicajca = LatLng(inputLokalicacja1, inputLokalicacja2)
+        val lokalicajca = LatLng(inputLokalicacja1, inputLokalicacja2)
         val TAG = "baza"
       var koniec: Boolean= true
         val database =
@@ -115,14 +115,10 @@ val lokalicajca = LatLng(inputLokalicacja1, inputLokalicacja2)
                     }
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
 //                TODO "Not yet implemented"
             }
         })
-
-
-
         //myRef.setValue(miejscePar)
            if(koniec) {
                 val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe

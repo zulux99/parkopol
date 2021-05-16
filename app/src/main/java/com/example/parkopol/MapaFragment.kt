@@ -3,30 +3,32 @@ package com.example.parkopol
 import android.Manifest
 import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager
-import android.location.*
+import android.location.Address
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
+import com.google.android.gms.maps.model.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.io.IOException
 
 
 class MapaFragment : Fragment(), OnMapReadyCallback {
-    private lateinit var mMap: GoogleMap
+    private lateinit var googleMap: GoogleMap
     private var mapView: MapView? = null
+    private var listaLokalizacji = ArrayList<LatLng>()
     private var showroomAddresses = arrayOfNulls<String>(5)
     private var aktualnaLokalizacja = LatLng(0.0, 0.0)
     var addressList: List<Address>? = null
@@ -49,10 +51,36 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         getLastKnownLocation()
         buttonMapaZlokalizuj.setOnClickListener {
             Log.d("komunikat", "Pobieram lokalizację")
-            wyswietlDostepneMiejscaParkingowe()
+//            wyswietlDostepneMiejscaParkingowe()
 //            TODO(naprawić funkcję)
 //            zoomMyCuurentLocation()
         }
+        val database =
+            FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+        val myRef = database.getReference("MiejsceParkingowe/").orderByChild("lokalizacja")
+        Log.d("baza", "test1")
+        myRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    var lat: Double
+                    var lng: Double
+                    var position: LatLng
+                    for (spotLatLng: DataSnapshot in dataSnapshot.children) {
+                        lat = spotLatLng.child("lokalizacja/latitude/").value.toString().toDouble()
+                        lng = spotLatLng.child("lokalizacja/longitude/").value.toString().toDouble()
+                        position = LatLng(lat, lng)
+                        Log.d("baza", "Lat: ${position.latitude} Lng: ${position.longitude}")
+                        listaLokalizacji.add(position)
+                    }
+                    for (i in listaLokalizacji)
+                        Log.d("baza", "Lista lokalizacji: $i")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+//                TODO "Not yet implemented"
+            }
+        })
         return view
     }
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -61,21 +89,21 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         } catch (e: GooglePlayServicesNotAvailableException) {
             e.printStackTrace()
         }
-        showroomAddresses[0] = "Leszno"
-        showroomAddresses[1] = "Rozstępniewo"
-        showroomAddresses[2] = "Osieczna"
-        showroomAddresses[3] = "Poznań"
-        showroomAddresses[4] = "Widziszewo"
         val geocoder = Geocoder(activity)
-        for (i in 0 until 5) {
+        Log.d("baza", "test4")
+        for (i in listaLokalizacji) {
             try {
-                addressList = geocoder.getFromLocationName(showroomAddresses[i], 1)
+                Log.d("baza", "test5")
+                addressList = geocoder.getFromLocation(i.latitude, i.longitude, 1)
             } catch (e: IOException) {
                 e.printStackTrace()
+                Log.d("baza", "test6")
             }
+            Log.d("baza", "test7")
             val address = addressList?.get(0)
+            Log.d("baza", "test: ${addressList?.get(0)}")
             latlng = LatLng(address!!.latitude, address.longitude)
-            val marker = googleMap?.addMarker(MarkerOptions().position(latlng).title(showroomAddresses[i]))
+            val marker = googleMap?.addMarker(MarkerOptions().position(latlng).title(i.latitude.toString()))
             builder.include(marker!!.position)
         }
         if (ActivityCompat.checkSelfPermission(
@@ -88,6 +116,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         ) {
             return
         }
+        Log.d("baza", "test9")
         googleMap?.isMyLocationEnabled = true
         googleMap?.uiSettings?.isMyLocationButtonEnabled = true
         val bounds = builder.build()
@@ -101,8 +130,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         val currentLatitude = location.latitude
         val currentLongitude = location.longitude
         val latLng = LatLng(currentLatitude, currentLongitude)
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 21f))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 21f))
         
     }
 //    private fun zoomMyCuurentLocation() {
@@ -205,30 +234,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
     return
     }
     private fun wyswietlDostepneMiejscaParkingowe() {
-        val database =
-            FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
-        val myRef = database.getReference("MiejsceParkingowe/").orderByChild("lokalizacja")
-        myRef.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    var lat: Double
-                    var lng: Double
-                    var position: LatLng
-                    for (spotLatLng: DataSnapshot in dataSnapshot.children) {
-                        lat = spotLatLng.child("lokalizacja/latitude/").value.toString().toDouble()
-                        lng = spotLatLng.child("lokalizacja/longitude/").value.toString().toDouble()
-                        position = LatLng(lat, lng)
-                        Log.d("baza", "Lat: ${position.latitude} Lng: ${position.longitude}")
-//                        TODO:    DODAĆ MARKER, CRASHUJE
-//                        mMap.addMarker(MarkerOptions().position(position).title("Miejsce parkingowe"))
-                    }
-                }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-//                TODO "Not yet implemented"
-            }
-        })
 //        myRef.get().addOnSuccessListener {
 //            val latitude = it.child("latitude")
 //            val longitude = it.child("longitude")
