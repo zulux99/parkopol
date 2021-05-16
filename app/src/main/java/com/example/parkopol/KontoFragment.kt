@@ -20,12 +20,14 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 
 class KontoFragment : Fragment() {
+   private var listaLokalizacji = ArrayList<MiejsceParkingowe>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
 
     ): View? {
+        tablicaMiejscaParkingowebaza()
 
 
         val myView = inflater.inflate(R.layout.fragment_konto, container, false)
@@ -61,12 +63,13 @@ class KontoFragment : Fragment() {
         }
     }
 
+
     data class MiejsceParkingowe(
-        val stan: Boolean? = false,
-        val mNiPelSprawnych: Boolean = false,
-        val idwlasciciela: String,
-        val lokalizacja: LatLng,
-        val cena: Double? = null
+        var stan: Boolean? = false,
+        var mNiPelSprawnych: Boolean? = false,
+        var idwlasciciela: String?="",
+        var lokalizacja: LatLng?=LatLng(0.0,0.0),
+        var cena: Double? = 0.0
     ) {
 
         fun toMiejsceParkingowe(): Map<String, Any?> {
@@ -82,54 +85,79 @@ class KontoFragment : Fragment() {
 
     }
 
+    fun  tablicaMiejscaParkingowebaza(){
+
+        val database =
+            FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+        val myRef = database.getReference("MiejsceParkingowe")
+
+        database.getReference("MiejsceParkingowe/").
+        orderByChild("lokalizacja").
+        addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (spotLatLng: DataSnapshot in dataSnapshot.children) {
+                        listaLokalizacji.add(MiejsceParkingowe(
+                            spotLatLng.child("stan").value.toString().toBoolean(),
+                            spotLatLng.child("mNiPelSprawnych").value.toString().toBoolean(),
+                            spotLatLng.child("idwlasciciela").value.toString(),
+                            LatLng(spotLatLng.child("lokalizacja/latitude/").value.toString().toDouble(),
+                                spotLatLng.child("lokalizacja/longitude/").value.toString().toDouble()),
+                            spotLatLng.child("cena").value.toString().toDouble() ))
+                       Log.d("bazaDoTablcy","${spotLatLng.key}")
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+//                TODO "Not yet implemented"
+            }
+        })
+    }
+
+
+
+
+
+
+
+
+
+
     private fun nowyParking(
         inputLokalicacja1: Double,
         inputLokalicacja2: Double,
         niepelnosprawni: Boolean
     ) {
-        val lokalicajca = LatLng(inputLokalicacja1, inputLokalicacja2)
-        val TAG = "baza"
-      var koniec: Boolean= true
         val database =
-        FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+            FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
         val myRef = database.getReference("MiejsceParkingowe")
 
-            database.getReference("MiejsceParkingowe/").
-            orderByChild("lokalizacja").
-            addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    var lat: Double
-                    var lng: Double
-                    var position: LatLng
-                    for (spotLatLng: DataSnapshot in dataSnapshot.children) {
-                        lat = spotLatLng.child("lokalizacja/latitude/").value.toString().toDouble()
-                        lng = spotLatLng.child("lokalizacja/longitude/").value.toString().toDouble()
-                        position = LatLng(lat, lng)
 
-                      if(lokalicajca==position){
-                          Log.e("baza", "PROBLEM asdaasdasdLat: ${position.latitude} Lng: ${position.longitude}")
-                        koniec= false
+        var lokalicajca = LatLng(inputLokalicacja1, inputLokalicacja2)
+            for (i in listaLokalizacji){
 
-                                          }
-                    }
+            Log.d("tablica", "tablica0: ${i.idwlasciciela} ")
+
+                if(lokalicajca==i.lokalizacja){
+                    Log.e("tablica", "nie dodawanie")
+                    return ;
                 }
-            }
-            override fun onCancelled(error: DatabaseError) {
-//                TODO "Not yet implemented"
-            }
-        })
+        }
+
+        Log.e("baza", "}}}}}}}}}}}}}}}}}}")
         //myRef.setValue(miejscePar)
-           if(koniec) {
+
+               Log.e("baza", "dodaje")
                 val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
                 myRef.child(id.toString()).setValue(
                     MiejsceParkingowe(
                         false, niepelnosprawni, FirebaseAuth.getInstance().currentUser!!.uid,
-                        lokalicajca
+                        lokalicajca,0.0
                     )
                 )
-            }
 
+        tablicaMiejscaParkingowebaza()
 
     }
 }
