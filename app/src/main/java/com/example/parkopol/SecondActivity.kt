@@ -23,11 +23,16 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
 
 class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    //private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
     private lateinit var drawer: DrawerLayout
     private lateinit var binding: ActivitySecondBinding
 //    private lateinit var fragmentKontoBinding: FragmentKontoBinding
@@ -101,5 +106,42 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             else -> return super.onOptionsItemSelected(item)
         }
     }
+}
+fun  tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.MiejsceParkingowe> = ArrayList<KontoFragment.MiejsceParkingowe>()): ArrayList<KontoFragment.MiejsceParkingowe> {
+
+    val database =
+        FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+    val myRef = database.getReference("MiejsceParkingowe")
+
+    database.getReference("MiejsceParkingowe/").
+    orderByChild("lokalizacja").
+    addListenerForSingleValueEvent(object: ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            if (dataSnapshot.exists()) {
+                for (spotLatLng: DataSnapshot in dataSnapshot.children) {
+                    listaLokalizacji.add(
+                        KontoFragment.MiejsceParkingowe(
+                            spotLatLng.child("stan").value.toString().toBoolean(),
+                            spotLatLng.child("mNiPelSprawnych").value.toString().toBoolean(),
+                            spotLatLng.child("idwlasciciela").value.toString(),
+                            LatLng(
+                                spotLatLng.child("lokalizacja/latitude/").value.toString()
+                                    .toDouble(),
+                                spotLatLng.child("lokalizacja/longitude/").value.toString()
+                                    .toDouble()
+                            ),
+                            spotLatLng.child("cena").value.toString().toDouble()
+                        )
+                    )
+                    Log.d("bazaDoTablcy","${spotLatLng.key}")
+                }
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+//                TODO "Not yet implemented"
+        }
+    })
+    return listaLokalizacji;
 }
 

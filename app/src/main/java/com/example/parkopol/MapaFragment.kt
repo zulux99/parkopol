@@ -26,9 +26,11 @@ import java.io.IOException
 
 
 class MapaFragment : Fragment(), OnMapReadyCallback {
+    private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
+
     private lateinit var googleMap: GoogleMap
     private var mapView: MapView? = null
-    private var listaLokalizacji = ArrayList<LatLng>()
+   //private var listaLokalizacji = ArrayList<LatLng>()
     private var showroomAddresses = arrayOfNulls<String>(5)
     private var aktualnaLokalizacja = LatLng(0.0, 0.0)
     var addressList: List<Address>? = null
@@ -39,6 +41,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji)
         val view: View = inflater.inflate(R.layout.fragment_mapa, container, false)
         val buttonMapaZlokalizuj = view.findViewById(R.id.mapa_zlokalizuj) as ImageButton
         // Gets the MapView from the XML layout and creates it
@@ -55,32 +58,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
 //            TODO(naprawić funkcję)
 //            zoomMyCuurentLocation()
         }
-        val database =
-            FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
-        val myRef = database.getReference("MiejsceParkingowe/").orderByChild("lokalizacja")
-        Log.d("baza", "test1")
-        myRef.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    var lat: Double
-                    var lng: Double
-                    var position: LatLng
-                    for (spotLatLng: DataSnapshot in dataSnapshot.children) {
-                        lat = spotLatLng.child("lokalizacja/latitude/").value.toString().toDouble()
-                        lng = spotLatLng.child("lokalizacja/longitude/").value.toString().toDouble()
-                        position = LatLng(lat, lng)
-                        Log.d("baza", "Lat: ${position.latitude} Lng: ${position.longitude}")
-                        listaLokalizacji.add(position)
-                    }
-                    for (i in listaLokalizacji)
-                        Log.d("baza", "Lista lokalizacji: $i")
-                }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-//                TODO "Not yet implemented"
-            }
-        })
         return view
     }
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -94,7 +72,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         for (i in listaLokalizacji) {
             try {
                 Log.d("baza", "test5")
-                addressList = geocoder.getFromLocation(i.latitude, i.longitude, 1)
+                addressList = geocoder.getFromLocation(i.lokalizacja!!.latitude, i.lokalizacja!!.longitude, 1)
             } catch (e: IOException) {
                 e.printStackTrace()
                 Log.d("baza", "test6")
@@ -103,7 +81,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
             val address = addressList?.get(0)
             Log.d("baza", "test: ${addressList?.get(0)}")
             latlng = LatLng(address!!.latitude, address.longitude)
-            val marker = googleMap?.addMarker(MarkerOptions().position(latlng).title(i.latitude.toString()))
+            val marker = googleMap?.addMarker(MarkerOptions().position(latlng).title(i.lokalizacja!!.latitude.toString()))
             builder.include(marker!!.position)
         }
         if (ActivityCompat.checkSelfPermission(
