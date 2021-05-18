@@ -2,6 +2,8 @@ package com.example.parkopol
 
 import android.Manifest
 import android.content.Context.LOCATION_SERVICE
+import android.content.Intent
+import android.content.Intent.getIntent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
@@ -30,7 +32,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var googleMap: GoogleMap
     private var mapView: MapView? = null
-   //private var listaLokalizacji = ArrayList<LatLng>()
+    //private var listaLokalizacji = ArrayList<LatLng>()
     private var showroomAddresses = arrayOfNulls<String>(5)
     private var aktualnaLokalizacja = LatLng(0.0, 0.0)
     var addressList: List<Address>? = null
@@ -41,7 +43,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji)
+        listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji);
+       // dodowanieMarker(googleMap)
         val view: View = inflater.inflate(R.layout.fragment_mapa, container, false)
         val buttonMapaZlokalizuj = view.findViewById(R.id.mapa_zlokalizuj) as ImageButton
         // Gets the MapView from the XML layout and creates it
@@ -58,31 +61,22 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
 //            TODO(naprawić funkcję)
 //            zoomMyCuurentLocation()
         }
-
+       // onMapReady(googleMap);
         return view
     }
+
     override fun onMapReady(googleMap: GoogleMap?) {
-        try {
-            MapsInitializer.initialize(SecondActivity())
-        } catch (e: GooglePlayServicesNotAvailableException) {
-            e.printStackTrace()
-        }
-        val geocoder = Geocoder(activity)
-        Log.d("baza", "test4")
+
+        listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji);
+       // listaLokalizacji.add(0, KontoFragment.MiejsceParkingowe(false,false,"wlascielkasd",LatLng(-33.1,151.2),1.8))
         for (i in listaLokalizacji) {
-            try {
-                Log.d("baza", "test5")
-                addressList = geocoder.getFromLocation(i.lokalizacja!!.latitude, i.lokalizacja!!.longitude, 1)
-            } catch (e: IOException) {
-                e.printStackTrace()
-                Log.d("baza", "test6")
-            }
-            Log.d("baza", "test7")
-            val address = addressList?.get(0)
-            Log.d("baza", "test: ${addressList?.get(0)}")
-            latlng = LatLng(address!!.latitude, address.longitude)
-            val marker = googleMap?.addMarker(MarkerOptions().position(latlng).title(i.lokalizacja!!.latitude.toString()))
-            builder.include(marker!!.position)
+
+            googleMap?.addMarker(
+                MarkerOptions()
+                    .position(i.lokalizacja)
+                    .title("Marker in dupa")
+            )
+            Log.d("baza", "test9");
         }
         if (ActivityCompat.checkSelfPermission(
                 activity!!.applicationContext,
@@ -110,9 +104,19 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         val latLng = LatLng(currentLatitude, currentLongitude)
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 21f))
-        
+
     }
-//    private fun zoomMyCuurentLocation() {
+    private fun dodowanieMarker(googleMap: GoogleMap?){
+        val sydney = LatLng(-33.852, 151.211)
+        googleMap!!.addMarker(
+            MarkerOptions()
+                .position(sydney)
+                .title("Marker in Sydney")
+        )
+
+
+    }
+    //    private fun zoomMyCuurentLocation() {
 //        Log.d("komunikat", "Błąd 1")
 //        val locationManager =
 //            context!!.getSystemService(LOCATION_SERVICE) as LocationManager
@@ -209,7 +213,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
             Log.d("komunikat",gps[0].toString())
             Log.d("komunikat",gps[1].toString())
         }
-    return
+        return
     }
     private fun wyswietlDostepneMiejscaParkingowe() {
 

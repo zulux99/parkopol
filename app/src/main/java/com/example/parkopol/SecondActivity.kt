@@ -32,11 +32,13 @@ import com.squareup.picasso.Picasso
 
 
 class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    //private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
+    private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
+
     private lateinit var drawer: DrawerLayout
     private lateinit var binding: ActivitySecondBinding
 //    private lateinit var fragmentKontoBinding: FragmentKontoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+    listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji);
         super.onCreate(savedInstanceState)
         binding = ActivitySecondBinding.inflate(layoutInflater)
         val headerBinding = NavHeaderBinding.bind(binding.navView.getHeaderView(0))
@@ -77,6 +79,7 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_mapa -> {
+                listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji)
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MapaFragment()).commit()
                 drawer.closeDrawer(GravityCompat.START)
                 return true
