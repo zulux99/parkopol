@@ -66,17 +66,20 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
-
-        listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji);
+        googleMap?.mapType = GoogleMap.MAP_TYPE_HYBRID
+        listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji)
        // listaLokalizacji.add(0, KontoFragment.MiejsceParkingowe(false,false,"wlascielkasd",LatLng(-33.1,151.2),1.8))
         for (i in listaLokalizacji) {
 
-            googleMap?.addMarker(
+            val marker = googleMap?.addMarker(
                 MarkerOptions()
                     .position(i.lokalizacja)
                     .title("Marker in dupa")
             )
-            Log.d("baza", "test9");
+            Log.d("baza", "test9")
+            val address = listaLokalizacji?.get(0)
+            latlng = LatLng(address!!.lokalizacja!!.latitude, address.lokalizacja!!.longitude)
+            builder.include(marker!!.position)
         }
         if (ActivityCompat.checkSelfPermission(
                 activity!!.applicationContext,
@@ -92,8 +95,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         googleMap?.isMyLocationEnabled = true
         googleMap?.uiSettings?.isMyLocationButtonEnabled = true
         val bounds = builder.build()
-        val padding = 0
-        val cu = CameraUpdateFactory.newLatLngBounds(bounds, padding)
+        val cu = CameraUpdateFactory.newLatLngBounds(bounds, 0)
         //CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(new MarkerOptions().position(latlng).title(showroomAddresses[3]).getPosition(),7F);
         googleMap?.animateCamera(cu)
     }
@@ -215,8 +217,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         }
         return
     }
-    private fun wyswietlDostepneMiejscaParkingowe() {
-
+//    private fun wyswietlDostepneMiejscaParkingowe() {
 //        myRef.get().addOnSuccessListener {
 //            val latitude = it.child("latitude")
 //            val longitude = it.child("longitude")
@@ -225,7 +226,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
 //        }.addOnFailureListener {
 //            Log.d("bazadanych", "Error getting data", it)
 //        }
-    }
+//    }
     //    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 //        if (requestCode == PERMISSION_REQUEST_ACCESS_FINE_LOCATION) {
