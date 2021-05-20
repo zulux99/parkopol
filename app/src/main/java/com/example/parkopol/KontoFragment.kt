@@ -13,11 +13,10 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
+import java.time.LocalDateTime
+import kotlin.math.log
 
 class KontoFragment : Fragment() {
   private var listaLokalizacji = ArrayList<MiejsceParkingowe>()
@@ -35,6 +34,9 @@ class KontoFragment : Fragment() {
         val inputLokalicacja1 = myView.findViewById(R.id.Lokalizacja_1) as EditText
         val inputLokalicacja2 = myView.findViewById(R.id.lokalicacja2) as EditText
         val niepelnosprawni= myView.findViewById(R.id.kontoCheckBoxNiePS) as CheckBox
+        val inputOpis = myView.findViewById(R.id.kontoOpis) as EditText
+        val inputCena = myView.findViewById(R.id.kontoCena) as EditText
+
         button.setOnClickListener {
             Log.d("komunikat", "1")
             deleteUser()
@@ -47,8 +49,12 @@ class KontoFragment : Fragment() {
             nowyParking(
                 inputLokalicacja1.text.toString().toDouble(),
                 inputLokalicacja2.text.toString().toDouble(),
-                niepelnosprawni.isChecked
+                niepelnosprawni.isChecked,
+                inputOpis.text.toString(),
+              //  inputCena.text.toString(),
             )
+
+//            Log.d("t",inputCena.text.toString().toDouble().toString())
         }
         return myView
     }
@@ -69,7 +75,8 @@ class KontoFragment : Fragment() {
         var mNiPelSprawnych: Boolean? = false,
         var idwlasciciela: String?="",
         var lokalizacja: LatLng?=LatLng(0.0,0.0),
-        var cena: Double? = 0.0
+        var cena: Double? = 0.0,
+        var opis: String?= ""
     ) {
 
         fun toMiejsceParkingowe(): Map<String, Any?> {
@@ -78,7 +85,8 @@ class KontoFragment : Fragment() {
                 "mNiPelSprawnych" to mNiPelSprawnych,
                 "idwlasciciela" to idwlasciciela,
                 "lokalizacja" to lokalizacja,
-                "cena" to cena
+                "cena" to cena,
+                "opis" to opis
             )
 
         }
@@ -90,8 +98,11 @@ class KontoFragment : Fragment() {
     private fun nowyParking(
         inputLokalicacja1: Double,
         inputLokalicacja2: Double,
-        niepelnosprawni: Boolean
+        niepelnosprawni: Boolean,
+        inputOpis: String,
+        //inputCena: String,
     ) {
+
         val database =
             FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
         val myRef = database.getReference("MiejsceParkingowe")
@@ -115,8 +126,12 @@ class KontoFragment : Fragment() {
                 val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
                 myRef.child(id.toString()).setValue(
                     MiejsceParkingowe(
-                        false, niepelnosprawni, FirebaseAuth.getInstance().currentUser!!.uid,
-                        lokalicajca,0.0
+                        false,
+                        niepelnosprawni,
+                        FirebaseAuth.getInstance().currentUser!!.uid,
+                        lokalicajca,
+                        0.1,
+                        inputOpis
                     )
                 )
 
