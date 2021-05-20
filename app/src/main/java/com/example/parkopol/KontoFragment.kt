@@ -20,21 +20,21 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 
 class KontoFragment : Fragment() {
-  private var listaLokalizacji = ArrayList<MiejsceParkingowe>()
+    private var listaLokalizacji = ArrayList<MiejsceParkingowe>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
 
     ): View? {
-        listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji)
+        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
 
 
         val myView = inflater.inflate(R.layout.fragment_konto, container, false)
         val button = myView.findViewById(R.id.konto_usun) as Button
         val inputLokalicacja1 = myView.findViewById(R.id.Lokalizacja_1) as EditText
         val inputLokalicacja2 = myView.findViewById(R.id.lokalicacja2) as EditText
-        val niepelnosprawni= myView.findViewById(R.id.kontoCheckBoxNiePS) as CheckBox
+        val niepelnosprawni = myView.findViewById(R.id.kontoCheckBoxNiePS) as CheckBox
         button.setOnClickListener {
             Log.d("komunikat", "1")
             deleteUser()
@@ -67,8 +67,8 @@ class KontoFragment : Fragment() {
     data class MiejsceParkingowe(
         var stan: Boolean? = false,
         var mNiPelSprawnych: Boolean? = false,
-        var idwlasciciela: String?="",
-        var lokalizacja: LatLng?=LatLng(0.0,0.0),
+        var idwlasciciela: String? = "",
+        var lokalizacja: LatLng? = LatLng(0.0, 0.0),
         var cena: Double? = 0.0
     ) {
 
@@ -86,7 +86,6 @@ class KontoFragment : Fragment() {
     }
 
 
-
     private fun nowyParking(
         inputLokalicacja1: Double,
         inputLokalicacja2: Double,
@@ -98,29 +97,29 @@ class KontoFragment : Fragment() {
 
 
         var lokalicajca = LatLng(inputLokalicacja1, inputLokalicacja2)
-            for (i in listaLokalizacji){
+        for (i in listaLokalizacji) {
 
             Log.d("tablica", "tablica0: ${i.idwlasciciela} ")
 
-                if(lokalicajca==i.lokalizacja){
-                    Log.e("tablica", "nie dodawanie")
-                    return ;
-                }
+            if (lokalicajca == i.lokalizacja) {
+                Log.e("tablica", "nie dodawanie")
+                return;
+            }
         }
 
         Log.e("baza", "}}}}}}}}}}}}}}}}}}")
         //myRef.setValue(miejscePar)
 
-               Log.e("baza", "dodaje")
-                val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
-                myRef.child(id.toString()).setValue(
-                    MiejsceParkingowe(
-                        false, niepelnosprawni, FirebaseAuth.getInstance().currentUser!!.uid,
-                        lokalicajca,0.0
-                    )
-                )
+        Log.e("baza", "dodaje")
+        val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
+        myRef.child(id.toString()).setValue(
+            MiejsceParkingowe(
+                false, niepelnosprawni, FirebaseAuth.getInstance().currentUser!!.uid,
+                lokalicajca, 0.0
+            )
+        )
 
-        listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji)
+        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
 
     }
 }

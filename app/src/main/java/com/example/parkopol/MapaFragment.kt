@@ -2,11 +2,8 @@ package com.example.parkopol
 
 import android.Manifest
 import android.content.Context.LOCATION_SERVICE
-import android.content.Intent
-import android.content.Intent.getIntent
 import android.content.pm.PackageManager
 import android.location.Address
-import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -15,23 +12,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.*
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import java.io.IOException
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MarkerOptions
 
 
 class MapaFragment : Fragment(), OnMapReadyCallback {
     private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
-
+    private val REQUEST_LOCATION = 123
     private lateinit var googleMap: GoogleMap
     private var mapView: MapView? = null
+
     //private var listaLokalizacji = ArrayList<LatLng>()
     private var showroomAddresses = arrayOfNulls<String>(5)
     private var aktualnaLokalizacja = LatLng(0.0, 0.0)
@@ -43,8 +42,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji);
-       // dodowanieMarker(googleMap)
+        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
+        // dodowanieMarker(googleMap)
         val view: View = inflater.inflate(R.layout.fragment_mapa, container, false)
         val buttonMapaZlokalizuj = view.findViewById(R.id.mapa_zlokalizuj) as ImageButton
         // Gets the MapView from the XML layout and creates it
@@ -61,37 +60,38 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
 //            TODO(naprawić funkcję)
 //            zoomMyCuurentLocation()
         }
-       // onMapReady(googleMap);
+        // onMapReady(googleMap);
         return view
     }
 
+
     override fun onMapReady(googleMap: GoogleMap?) {
         googleMap?.mapType = GoogleMap.MAP_TYPE_HYBRID
-        listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji)
-       // listaLokalizacji.add(0, KontoFragment.MiejsceParkingowe(false,false,"wlascielkasd",LatLng(-33.1,151.2),1.8))
+        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
+        // listaLokalizacji.add(0, KontoFragment.MiejsceParkingowe(false,false,"wlascielkasd",LatLng(-33.1,151.2),1.8))
         for (i in listaLokalizacji) {
 
             val marker = googleMap?.addMarker(
                 MarkerOptions()
                     .position(i.lokalizacja)
-                    .title("Marker in dupa")
+                    .title("Wolne miejsce")
             )
             Log.d("baza", "test9")
             val address = listaLokalizacji?.get(0)
             latlng = LatLng(address!!.lokalizacja!!.latitude, address.lokalizacja!!.longitude)
             builder.include(marker!!.position)
         }
+        Log.d("baza", "test9")
         if (ActivityCompat.checkSelfPermission(
-                activity!!.applicationContext,
+                context!!.applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                activity!!.applicationContext,
+                context!!.applicationContext,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             return
         }
-        Log.d("baza", "test9")
         googleMap?.isMyLocationEnabled = true
         googleMap?.uiSettings?.isMyLocationButtonEnabled = true
         val bounds = builder.build()
@@ -99,6 +99,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         //CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(new MarkerOptions().position(latlng).title(showroomAddresses[3]).getPosition(),7F);
         googleMap?.animateCamera(cu)
     }
+
     private fun handleNewLocation(location: Location) {
         Log.d("komunikat", location.toString())
         val currentLatitude = location.latitude
@@ -108,7 +109,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 21f))
 
     }
-    private fun dodowanieMarker(googleMap: GoogleMap?){
+
+    private fun dodowanieMarker(googleMap: GoogleMap?) {
         val sydney = LatLng(-33.852, 151.211)
         googleMap!!.addMarker(
             MarkerOptions()
@@ -118,6 +120,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
 
 
     }
+
     //    private fun zoomMyCuurentLocation() {
 //        Log.d("komunikat", "Błąd 1")
 //        val locationManager =
@@ -177,7 +180,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
 //        }
 //    }
     private fun getLastKnownLocation() {
-        val locationManager: LocationManager = context?.getSystemService(LOCATION_SERVICE) as LocationManager
+        val locationManager: LocationManager =
+            context?.getSystemService(LOCATION_SERVICE) as LocationManager
         val providers: List<String> = locationManager.getProviders(true)
         var location: Location? = null
         Log.d("komunikat", "getLastKnownLocation 1")
@@ -202,7 +206,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
                 return
             }
             Log.d("komunikat", "getLastKnownLocation 4")
-            location= locationManager.getLastKnownLocation(providers[i])
+            location = locationManager.getLastKnownLocation(providers[i])
             if (location != null)
                 break
         }
@@ -212,12 +216,13 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
             gps[0] = location.latitude
             gps[1] = location.longitude
             aktualnaLokalizacja = LatLng(gps[0], gps[1])
-            Log.d("komunikat",gps[0].toString())
-            Log.d("komunikat",gps[1].toString())
+            Log.d("komunikat", gps[0].toString())
+            Log.d("komunikat", gps[1].toString())
         }
         return
     }
-//    private fun wyswietlDostepneMiejscaParkingowe() {
+
+    //    private fun wyswietlDostepneMiejscaParkingowe() {
 //        myRef.get().addOnSuccessListener {
 //            val latitude = it.child("latitude")
 //            val longitude = it.child("longitude")
@@ -240,6 +245,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         mapView?.onResume();
         super.onResume();
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         super.onDestroy();

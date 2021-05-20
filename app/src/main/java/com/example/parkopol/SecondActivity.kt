@@ -1,6 +1,8 @@
 package com.example.parkopol
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +10,8 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.parkopol.databinding.ActivitySecondBinding
@@ -33,12 +37,12 @@ import com.squareup.picasso.Picasso
 
 class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
-
     private lateinit var drawer: DrawerLayout
     private lateinit var binding: ActivitySecondBinding
-//    private lateinit var fragmentKontoBinding: FragmentKontoBinding
+
+    //    private lateinit var fragmentKontoBinding: FragmentKontoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-    listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji);
+        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
         super.onCreate(savedInstanceState)
         binding = ActivitySecondBinding.inflate(layoutInflater)
         val headerBinding = NavHeaderBinding.bind(binding.navView.getHeaderView(0))
@@ -48,7 +52,8 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         drawer = binding.drawerLayout
         val toogle = ActionBarDrawerToggle(
             this, drawer, binding.toolbar,
-            R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+            R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        )
         drawer.addDrawerListener(toogle)
         toogle.syncState()
         if (signInAccount != null) {
@@ -64,9 +69,55 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         val navigationView = binding.navView
         navigationView.bringToFront()
         navigationView.setNavigationItemSelectedListener(this)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
+                )
+            } else {
+                ActivityCompat.requestPermissions(
+                    SecondActivity(),
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
+                )
+            }
+        }
 //        KTÓRY FRAGMENT MA SIĘ WYŚWIETLAĆ NA STARCIE
 //        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, KontoFragment()).commit()
 //        navigationView.setCheckedItem(R.id.nav_konto)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            1 -> {
+                if (grantResults.isNotEmpty() && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED
+                ) {
+                    if ((ContextCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) ==
+                                PackageManager.PERMISSION_GRANTED)
+                    ) {
+                        Toast.makeText(this, "Przyznano uprawnienia", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this, "Nie przyznano uprawnień", Toast.LENGTH_SHORT).show()
+                }
+                return
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -76,11 +127,13 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             super.onBackPressed()
         }
     }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_mapa -> {
-                listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji)
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MapaFragment()).commit()
+                listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, MapaFragment()).commit()
                 drawer.closeDrawer(GravityCompat.START)
                 return true
             }
@@ -93,12 +146,14 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 return true
             }
             R.id.nav_konto -> {
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, KontoFragment()).commit()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, KontoFragment()).commit()
                 drawer.closeDrawer(GravityCompat.START)
                 return true
             }
             R.id.nav_historia -> {
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, HistoriaFragment()).commit()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, HistoriaFragment()).commit()
                 drawer.closeDrawer(GravityCompat.START)
                 return true
             }
@@ -110,41 +165,41 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         }
     }
 }
-fun  tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.MiejsceParkingowe> = ArrayList<KontoFragment.MiejsceParkingowe>()): ArrayList<KontoFragment.MiejsceParkingowe> {
+
+fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.MiejsceParkingowe> = ArrayList<KontoFragment.MiejsceParkingowe>()): ArrayList<KontoFragment.MiejsceParkingowe> {
 
     val database =
         FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
     val myRef = database.getReference("MiejsceParkingowe")
 
-    database.getReference("MiejsceParkingowe/").
-    orderByChild("lokalizacja").
-    addListenerForSingleValueEvent(object: ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            if (dataSnapshot.exists()) {
-                for (spotLatLng: DataSnapshot in dataSnapshot.children) {
-                    listaLokalizacji.add(
-                        KontoFragment.MiejsceParkingowe(
-                            spotLatLng.child("stan").value.toString().toBoolean(),
-                            spotLatLng.child("mNiPelSprawnych").value.toString().toBoolean(),
-                            spotLatLng.child("idwlasciciela").value.toString(),
-                            LatLng(
-                                spotLatLng.child("lokalizacja/latitude/").value.toString()
-                                    .toDouble(),
-                                spotLatLng.child("lokalizacja/longitude/").value.toString()
-                                    .toDouble()
-                            ),
-                            spotLatLng.child("cena").value.toString().toDouble()
+    database.getReference("MiejsceParkingowe/").orderByChild("lokalizacja")
+        .addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (spotLatLng: DataSnapshot in dataSnapshot.children) {
+                        listaLokalizacji.add(
+                            KontoFragment.MiejsceParkingowe(
+                                spotLatLng.child("stan").value.toString().toBoolean(),
+                                spotLatLng.child("mNiPelSprawnych").value.toString().toBoolean(),
+                                spotLatLng.child("idwlasciciela").value.toString(),
+                                LatLng(
+                                    spotLatLng.child("lokalizacja/latitude/").value.toString()
+                                        .toDouble(),
+                                    spotLatLng.child("lokalizacja/longitude/").value.toString()
+                                        .toDouble()
+                                ),
+                                spotLatLng.child("cena").value.toString().toDouble()
+                            )
                         )
-                    )
-                    Log.d("bazaDoTablcy","${spotLatLng.key}")
+                        Log.d("bazaDoTablcy", "${spotLatLng.key}")
+                    }
                 }
             }
-        }
 
-        override fun onCancelled(error: DatabaseError) {
+            override fun onCancelled(error: DatabaseError) {
 //                TODO "Not yet implemented"
-        }
-    })
+            }
+        })
     return listaLokalizacji;
 }
 
