@@ -47,10 +47,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         val view: View = inflater.inflate(R.layout.fragment_mapa, container, false)
         val buttonMapaZlokalizuj = view.findViewById(R.id.mapa_zlokalizuj) as ImageButton
         // Gets the MapView from the XML layout and creates it
-        // Gets the MapView from the XML layout and creates it
         mapView = view.findViewById<View>(R.id.mapView) as MapView
         mapView!!.onCreate(savedInstanceState)
-        // Set the map ready callback to receive the GoogleMap object
         // Set the map ready callback to receive the GoogleMap object
         mapView!!.getMapAsync(this)
         getLastKnownLocation()
@@ -99,17 +97,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         //CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(new MarkerOptions().position(latlng).title(showroomAddresses[3]).getPosition(),7F);
         googleMap?.animateCamera(cu)
     }
-
-    private fun handleNewLocation(location: Location) {
-        Log.d("komunikat", location.toString())
-        val currentLatitude = location.latitude
-        val currentLongitude = location.longitude
-        val latLng = LatLng(currentLatitude, currentLongitude)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 21f))
-
-    }
-
     private fun dodowanieMarker(googleMap: GoogleMap?) {
         val sydney = LatLng(-33.852, 151.211)
         googleMap!!.addMarker(
@@ -117,68 +104,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
                 .position(sydney)
                 .title("Marker in Sydney")
         )
-
-
     }
-
-    //    private fun zoomMyCuurentLocation() {
-//        Log.d("komunikat", "Błąd 1")
-//        val locationManager =
-//            context!!.getSystemService(LOCATION_SERVICE) as LocationManager
-//        val criteria = Criteria()
-//        if (ActivityCompat.checkSelfPermission(activity!!.applicationContext,
-//                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            Log.d("komunikat", "Błąd 2")
-//            ActivityCompat.checkSelfPermission(
-//                activity!!.applicationContext,
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            )
-//        }
-//        Log.d("komunikat", "Błąd 3")
-//        val location= locationManager.getBestProvider(criteria,false)?.let {
-//            locationManager.getLastKnownLocation(it)
-//        }
-//        Log.d("komunikat", "Błąd 4")
-//        if (location != null) {
-//            Log.d("komunikat", "Błąd 5")
-//            val lat: Double = location.latitude
-//            val longi: Double = location.longitude
-//            val latLng = LatLng(lat, longi)
-//            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f))
-//            Log.d("komunikat", "zoomMyCuurentLocation: location not null")
-//        } else {
-//            Log.d("komunikat", "Błąd 6")
-//            setMyLastLocation()
-//        }
-//    }
-//    private fun setMyLastLocation() {
-//        Log.d("komunikat", "setMyLastLocation: excecute, and get last location")
-//        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!.applicationContext)
-//                Log.d("komunikat", "setlocation 1")
-//    if (ActivityCompat.checkSelfPermission(
-//            activity!!.applicationContext,
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-//            activity!!.applicationContext,
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//        Log.d("komunikat", "setlocation 2")
-//        return
-//        }
-//        Log.d("komunikat", "setlocation 3")
-//        fusedLocationClient.lastLocation.addOnSuccessListener(SecondActivity()) { location ->
-//            Log.d("komunikat", "setlocation 4")
-//            if (location != null) {
-//                Log.d("komunikat", "setlocation 5")
-//                val lat: Double = location.latitude
-//                val longi: Double = location.longitude
-//                val latLng = LatLng(lat, longi)
-//                Log.d("komunikat", "MyLastLocation coordinat :$latLng")
-//                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f))
-//            }
-//        }
-//    }
     private fun getLastKnownLocation() {
         val locationManager: LocationManager =
             context?.getSystemService(LOCATION_SERVICE) as LocationManager
@@ -196,13 +122,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 Log.d("komunikat", "getLastKnownLocation 3")
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return
             }
             Log.d("komunikat", "getLastKnownLocation 4")
@@ -221,26 +140,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         }
         return
     }
-
-    //    private fun wyswietlDostepneMiejscaParkingowe() {
-//        myRef.get().addOnSuccessListener {
-//            val latitude = it.child("latitude")
-//            val longitude = it.child("longitude")
-////            mMap?.addMarker(MarkerOptions().position(latitude, longitude).title(showroomAddresses[i]))
-//            Log.d("bazadanych", "Got value $latitude")
-//        }.addOnFailureListener {
-//            Log.d("bazadanych", "Error getting data", it)
-//        }
-//    }
-    //    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        if (requestCode == PERMISSION_REQUEST_ACCESS_FINE_LOCATION) {
-//            when (grantResults[0]) {
-//                PackageManager.PERMISSION_GRANTED -> getLocation()
-//                PackageManager.PERMISSION_DENIED -> Toast.makeText(SecondActivity(), "Zezwól na lokalizację", Toast.LENGTH_LONG).show()
-//            }
-//        }
-//    }
     override fun onResume() {
         mapView?.onResume();
         super.onResume();

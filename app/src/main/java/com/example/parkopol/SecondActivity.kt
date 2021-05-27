@@ -26,6 +26,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -33,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+import java.time.LocalDateTime
 
 
 class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -203,3 +205,32 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.Miejs
     return listaLokalizacji;
 }
 
+// Przyład dodawania
+//var test =Zaparkowanie("testyidOsp","idmiejscaparkingopwego", LocalDateTime.now(),
+//            LocalDateTime.now().plusHours(2),22.4);
+//    test.dodawanieDobazy()
+data class Zaparkowanie(
+    var idOsobyParkujacej: String = "",
+    var idMiejsceParkingowe: String = "",
+    var startZaparkowania: LocalDateTime = LocalDateTime.now(),
+    var koniecZaparkowania: LocalDateTime = LocalDateTime.now().plusHours(12),
+    var koszt: Double = 0.0
+
+) {
+    fun dodawanieDobazy() {
+        val database =
+            FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+        val myRef = database.getReference("Zaparkowanie")
+
+        val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
+        myRef.child(id.toString()).setValue(
+            Zaparkowanie(
+                FirebaseAuth.getInstance().currentUser!!.uid,
+                this.idMiejsceParkingowe,
+                this.startZaparkowania,
+                this.koniecZaparkowania,
+                this.koszt
+            )
+        )
+    }
+}
