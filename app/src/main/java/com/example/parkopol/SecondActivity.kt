@@ -194,7 +194,6 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.Miejs
         })
     return listaLokalizacji
 }
-
 // Przyład dodawania
 //var test =Zaparkowanie("testyidOsp","idmiejscaparkingopwego", LocalDateTime.now(),
 //            LocalDateTime.now().plusHours(2),22.4);

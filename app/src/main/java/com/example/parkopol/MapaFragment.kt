@@ -10,19 +10,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.example.parkopol.databinding.FragmentMapaBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 
-class MapaFragment : Fragment(), OnMapReadyCallback {
+class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
     private val REQUEST_LOCATION = 123
     private var mapView: MapView? = null
@@ -65,6 +68,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
             val address = listaLokalizacji[0]
             latlng = LatLng(address.lokalizacja!!.latitude, address.lokalizacja!!.longitude)
             builder.include(marker!!.position)
+            googleMap.setOnMarkerClickListener(this);
         }
         if (ActivityCompat.checkSelfPermission(
                 context!!.applicationContext,
@@ -82,6 +86,14 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         val cu = CameraUpdateFactory.newLatLngBounds(bounds, 0)
         googleMap?.animateCamera(cu)
     }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        Log.d("komunikat", "Pinezka")
+        val btnZaparkuj = view?.findViewById(R.id.zaparkuj) as Button
+        btnZaparkuj.visibility = View.VISIBLE
+        return false
+    }
+
     private fun dodowanieMarker(googleMap: GoogleMap?) {
         val sydney = LatLng(-33.852, 151.211)
         googleMap!!.addMarker(
@@ -90,6 +102,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
                 .title("Marker in Sydney")
         )
     }
+
     private fun getLastKnownLocation() {
         val locationManager: LocationManager =
             context?.getSystemService(LOCATION_SERVICE) as LocationManager
@@ -125,6 +138,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         }
         return
     }
+
     override fun onResume() {
         mapView?.onResume()
         super.onResume()
@@ -135,4 +149,5 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         super.onDestroy()
         mapView?.onDestroy()
     }
+
 }
