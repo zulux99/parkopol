@@ -15,28 +15,22 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
-import java.time.LocalDateTime
-import kotlin.math.log
 
 class KontoFragment : Fragment() {
-  private var listaLokalizacji = ArrayList<MiejsceParkingowe>()
+    private var listaLokalizacji = ArrayList<MiejsceParkingowe>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-
     ): View? {
-        listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji)
-
-
+        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
         val myView = inflater.inflate(R.layout.fragment_konto, container, false)
         val button = myView.findViewById(R.id.konto_usun) as Button
         val inputLokalicacja1 = myView.findViewById(R.id.Lokalizacja_1) as EditText
         val inputLokalicacja2 = myView.findViewById(R.id.lokalicacja2) as EditText
-        val niepelnosprawni= myView.findViewById(R.id.kontoCheckBoxNiePS) as CheckBox
+        val niepelnosprawni = myView.findViewById(R.id.kontoCheckBoxNiePS) as CheckBox
         val inputOpis = myView.findViewById(R.id.kontoOpis) as EditText
         val inputCena = myView.findViewById(R.id.kontoCena) as EditText
-
         button.setOnClickListener {
             Log.d("komunikat", "1")
             deleteUser()
@@ -51,7 +45,7 @@ class KontoFragment : Fragment() {
                 inputLokalicacja2.text.toString().toDouble(),
                 niepelnosprawni.isChecked,
                 inputOpis.text.toString(),
-              //  inputCena.text.toString(),
+                //  inputCena.text.toString(),
             )
 
 //            Log.d("t",inputCena.text.toString().toDouble().toString())
@@ -69,16 +63,14 @@ class KontoFragment : Fragment() {
         }
     }
 
-
     data class MiejsceParkingowe(
         var stan: Boolean? = false,
         var mNiPelSprawnych: Boolean? = false,
-        var idwlasciciela: String?="",
-        var lokalizacja: LatLng?=LatLng(0.0,0.0),
+        var idwlasciciela: String? = "",
+        var lokalizacja: LatLng? = LatLng(0.0, 0.0),
         var cena: Double? = 0.0,
-        var opis: String?= ""
+        var opis: String? = ""
     ) {
-
         fun toMiejsceParkingowe(): Map<String, Any?> {
             return mapOf(
                 "stan" to stan,
@@ -88,12 +80,8 @@ class KontoFragment : Fragment() {
                 "cena" to cena,
                 "opis" to opis
             )
-
         }
-
     }
-
-
 
     private fun nowyParking(
         inputLokalicacja1: Double,
@@ -102,40 +90,31 @@ class KontoFragment : Fragment() {
         inputOpis: String,
         //inputCena: String,
     ) {
-
         val database =
             FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
         val myRef = database.getReference("MiejsceParkingowe")
-
-
-        var lokalicajca = LatLng(inputLokalicacja1, inputLokalicacja2)
-            for (i in listaLokalizacji){
-
+        val lokalicajca = LatLng(inputLokalicacja1, inputLokalicacja2)
+        for (i in listaLokalizacji) {
             Log.d("tablica", "tablica0: ${i.idwlasciciela} ")
-
-                if(lokalicajca==i.lokalizacja){
-                    Log.e("tablica", "nie dodawanie")
-                    return ;
-                }
+            if (lokalicajca == i.lokalizacja) {
+                Log.e("tablica", "nie dodawanie")
+                return
+            }
         }
-
         Log.e("baza", "}}}}}}}}}}}}}}}}}}")
         //myRef.setValue(miejscePar)
-
-               Log.e("baza", "dodaje")
-                val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
-                myRef.child(id.toString()).setValue(
-                    MiejsceParkingowe(
-                        false,
-                        niepelnosprawni,
-                        FirebaseAuth.getInstance().currentUser!!.uid,
-                        lokalicajca,
-                        0.1,
-                        inputOpis
-                    )
-                )
-
-        listaLokalizacji= tablicaMiejscaParkingowebaza(listaLokalizacji)
-
+        Log.e("baza", "dodaje")
+        val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
+        myRef.child(id.toString()).setValue(
+            MiejsceParkingowe(
+                false,
+                niepelnosprawni,
+                FirebaseAuth.getInstance().currentUser!!.uid,
+                lokalicajca,
+                0.1,
+                inputOpis
+            )
+        )
+        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
     }
 }
