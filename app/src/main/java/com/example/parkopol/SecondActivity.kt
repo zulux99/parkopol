@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -14,10 +15,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.parkopol.databinding.ActivitySecondBinding
+import com.example.parkopol.databinding.FragmentKontoBinding
 import com.example.parkopol.databinding.NavHeaderBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -37,7 +44,7 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     //    private lateinit var fragmentKontoBinding: FragmentKontoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
+        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
         super.onCreate(savedInstanceState)
         binding = ActivitySecondBinding.inflate(layoutInflater)
         val headerBinding = NavHeaderBinding.bind(binding.navView.getHeaderView(0))
@@ -54,7 +61,8 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         if (signInAccount != null) {
             headerBinding.imieNazwisko.text = signInAccount.displayName
             headerBinding.adresEmail.text = signInAccount.email
-            Picasso.get().load(signInAccount.photoUrl!!.toString()).into(headerBinding.navAvatar)
+            Log.d("komunikat", "google avatar url: " + signInAccount.photoUrl.toString())
+            Picasso.get().load(signInAccount.photoUrl.toString()).into(headerBinding.navAvatar)
         }
 //        fragmentKontoBinding.kontoUsun.setOnClickListener {
 //            Log.d("komunikat", "listener działa")
@@ -160,10 +168,12 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 }
 
-fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.MiejsceParkingowe> = ArrayList()): ArrayList<KontoFragment.MiejsceParkingowe> {
+fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.MiejsceParkingowe> = ArrayList<KontoFragment.MiejsceParkingowe>()): ArrayList<KontoFragment.MiejsceParkingowe> {
 
     val database =
         FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+    val myRef = database.getReference("MiejsceParkingowe")
+
     database.getReference("MiejsceParkingowe/").orderByChild("lokalizacja")
         .addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -192,7 +202,7 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.Miejs
 //                TODO "Not yet implemented"
             }
         })
-    return listaLokalizacji
+    return listaLokalizacji;
 }
 // Przyład dodawania
 //var test =Zaparkowanie("testyidOsp","idmiejscaparkingopwego", LocalDateTime.now(),
@@ -222,3 +232,4 @@ data class Zaparkowanie(
         )
     }
 }
+
