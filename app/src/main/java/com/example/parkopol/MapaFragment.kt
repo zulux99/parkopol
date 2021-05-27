@@ -25,7 +25,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 
-class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
     private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
     private val REQUEST_LOCATION = 123
     private var mapView: MapView? = null
@@ -68,7 +68,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             val address = listaLokalizacji[0]
             latlng = LatLng(address.lokalizacja!!.latitude, address.lokalizacja!!.longitude)
             builder.include(marker!!.position)
-            googleMap.setOnMarkerClickListener(this);
+            googleMap.setOnMarkerClickListener(this)
         }
         if (ActivityCompat.checkSelfPermission(
                 context!!.applicationContext,
@@ -80,6 +80,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         ) {
             return
         }
+        googleMap?.setOnMapClickListener(this)
         googleMap?.isMyLocationEnabled = true
         googleMap?.uiSettings?.isMyLocationButtonEnabled = true
         val bounds = builder.build()
@@ -92,6 +93,10 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val btnZaparkuj = view?.findViewById(R.id.zaparkuj) as Button
         btnZaparkuj.visibility = View.VISIBLE
         return false
+    }
+    override fun onMapClick(p0: LatLng) {
+        val btnZaparkuj = view?.findViewById(R.id.zaparkuj) as Button
+        btnZaparkuj.visibility = View.GONE
     }
 
     private fun dodowanieMarker(googleMap: GoogleMap?) {
