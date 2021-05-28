@@ -2,6 +2,7 @@ package com.example.parkopol
 
 import android.Manifest
 import android.content.Context.LOCATION_SERVICE
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
@@ -22,6 +23,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.auth.FirebaseAuth
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
@@ -60,7 +66,9 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                     .position(i.lokalizacja)
                     .title("Wolne$licznik")
             )
+
             if (marker != null) {
+                marker.setTag(i.idMParkingowego)
                 mMarkerArray.add(marker)
             }
             builder.include(marker!!.position)
@@ -116,6 +124,15 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     override fun onMarkerClick(marker: Marker): Boolean {
         val btnZaparkuj = view?.findViewById(R.id.zaparkuj) as Button
+        btnZaparkuj.setOnClickListener{
+        Log.d("komunikat_ID", marker.getTag().toString())
+        zmianaStanu(marker.getTag().toString(),true)
+        Zaparkowanie(FirebaseAuth.getInstance().currentUser!!.uid,marker!!.getTag().toString(), SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+            Locale.GERMAN).format(Date()),"0" , 0.0 ).dodawanieDobazy()
+        val intent = Intent(activity, SecondActivity::class.java)
+        startActivity(intent)
+        }
+
         btnZaparkuj.visibility = View.VISIBLE
         return false
     }

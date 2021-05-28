@@ -27,7 +27,10 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -179,7 +182,9 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.Miejs
                                     spotLatLng.child("lokalizacja/longitude/").value.toString()
                                         .toDouble()
                                 ),
-                                spotLatLng.child("cena").value.toString().toDouble()
+                                spotLatLng.child("cena").value.toString().toDouble(),
+                                spotLatLng.child("opis").value.toString(),
+                                spotLatLng.key.toString()
                             )
                         )
                         Log.d("bazaDoTablcy", "${spotLatLng.key}")
@@ -200,8 +205,8 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.Miejs
 data class Zaparkowanie(
     var idOsobyParkujacej: String = "",
     var idMiejsceParkingowe: String = "",
-    var startZaparkowania: LocalDateTime = LocalDateTime.now(),
-    var koniecZaparkowania: LocalDateTime = LocalDateTime.now().plusHours(12),
+    var startZaparkowania: String =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.GERMAN).format(Date()),
+    var koniecZaparkowania: String = "0",
     var koszt: Double = 0.0
 ) {
     fun dodawanieDobazy() {
@@ -222,3 +227,15 @@ data class Zaparkowanie(
     }
 }
 
+fun zmianaStanu(
+    idMParkingowego : String,
+    stan: Boolean
+){
+    val database =FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+
+    database.getReference("MiejsceParkingowe/").updateChildren(hashMapOf<String, Any>(
+        ("/${idMParkingowego}/stan" to stan)!!
+    ))
+
+
+}

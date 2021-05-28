@@ -15,6 +15,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class KontoFragment : Fragment() {
     private var listaLokalizacji = ArrayList<MiejsceParkingowe>()
@@ -69,8 +72,11 @@ class KontoFragment : Fragment() {
         var idwlasciciela: String? = "",
         var lokalizacja: LatLng? = LatLng(0.0, 0.0),
         var cena: Double? = 0.0,
-        var opis: String? = ""
+        var opis: String? = "",
+        var idMParkingowego: String? = "",
     ) {
+
+
         fun toMiejsceParkingowe(): Map<String, Any?> {
             return mapOf(
                 "stan" to stan,
@@ -90,6 +96,11 @@ class KontoFragment : Fragment() {
         inputOpis: String,
         //inputCena: String,
     ) {
+//      val  test = Zaparkowanie("abc","idmiejsca",
+//          SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN).format(Date()),
+//           SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.GERMAN).format(Date()).plus(Calendar.HOUR),0.1
+//      )
+      //  test.dodawanieDobazy();
         val database =
             FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
         val myRef = database.getReference("MiejsceParkingowe")
