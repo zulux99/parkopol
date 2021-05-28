@@ -35,12 +35,14 @@ import kotlin.collections.ArrayList
 
 class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
+    var aktywnyZaparkowanie : Boolean= sprawdzZaparkowanie(FirebaseAuth.getInstance().currentUser!!.uid)
     private lateinit var drawer: DrawerLayout
     private lateinit var binding: ActivitySecondBinding
 
     //    private lateinit var fragmentKontoBinding: FragmentKontoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
+
         super.onCreate(savedInstanceState)
         binding = ActivitySecondBinding.inflate(layoutInflater)
         val headerBinding = NavHeaderBinding.bind(binding.navView.getHeaderView(0))
@@ -129,10 +131,17 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_mapa -> {
-                listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, MapaFragment()).commit()
-                drawer.closeDrawer(GravityCompat.START)
+                if (aktywnyZaparkowanie){
+                    Log.d("komunkat", "true")
+                    listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, MapaFragment()).commit()
+                    drawer.closeDrawer(GravityCompat.START)
+                }else{
+                    Log.d("komunkat", "false")
+                }
+
+
                 return true
             }
             R.id.nav_logout -> {
@@ -225,6 +234,29 @@ data class Zaparkowanie(
             )
         )
     }
+
+}
+fun sprawdzZaparkowanie(idOsobyParkujacej: String ): Boolean {
+    var war = true;
+    val database =
+        FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+    database.getReference("Zaparkowanie/").orderByChild("idOsobyParkujacej").equalTo(idOsobyParkujacej)
+        .addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (spotLatLng: DataSnapshot in dataSnapshot.children) {
+                        Log.d("komunikat_sprawdzZ", "zwracja false jest w bazie")
+                        war= false
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    Log.d("komunikat_sprawdzZ", "zw: "+war.toString())
+    return war
 }
 
 fun zmianaStanu(
