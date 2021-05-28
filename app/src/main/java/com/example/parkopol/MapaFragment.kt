@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -23,16 +22,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import org.json.JSONArray
-import org.json.JSONException
-import java.util.*
-import kotlin.collections.ArrayList
 
 
-class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
+class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+    GoogleMap.OnMapClickListener {
     private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
-    private val REQUEST_LOCATION = 123
     private var mapView: MapView? = null
+    private val mMarkerArray = ArrayList<Marker>()
     private var aktualnaLokalizacja = LatLng(0.0, 0.0)
     private var builder = LatLngBounds.Builder()
     override fun onCreateView(
@@ -43,7 +39,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
         // dodowanieMarker(googleMap)
         val view: View = inflater.inflate(R.layout.fragment_mapa, container, false)
-        val buttonMapaZlokalizuj = view.findViewById(R.id.mapa_zlokalizuj) as ImageButton
         // Gets the MapView from the XML layout and creates it
         mapView = view.findViewById<View>(R.id.mapView) as MapView
         mapView!!.onCreate(savedInstanceState)
@@ -53,7 +48,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         return view
     }
 
-    private var mClosestMarker: Marker? = null
     private var mindist = 0f
     override fun onMapReady(googleMap: GoogleMap?) {
         googleMap?.mapType = GoogleMap.MAP_TYPE_HYBRID
@@ -66,24 +60,12 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                     .position(i.lokalizacja)
                     .title("Wolne$licznik")
             )
+            if (marker != null) {
+                mMarkerArray.add(marker)
+            }
             builder.include(marker!!.position)
             googleMap.setOnMarkerClickListener(this)
-            val distance = FloatArray(1)
-            if (i.lokalizacja != null) {
-                Location.distanceBetween(
-                    getLastKnownLocation().latitude,
-                    getLastKnownLocation().longitude, i.lokalizacja!!.latitude,
-                    i.lokalizacja!!.longitude, distance
-                )
-            }
-            if (licznik == 0)
-                mindist = distance[0]
-            else if (mindist > distance[0]) {
-                mindist = distance[0]
-                mClosestMarker = marker
-            }
         }
-        Log.d("komunikat", mClosestMarker?.title + " " + mindist)
         if (ActivityCompat.checkSelfPermission(
                 context!!.applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -100,16 +82,34 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val bounds = builder.build()
         val cu = CameraUpdateFactory.newLatLngBounds(bounds, 0)
         googleMap?.animateCamera(cu)
-        if (googleMap != null && mClosestMarker != null) {
-            pokazWolne(googleMap, mClosestMarker!!)
+        if (googleMap != null) {
+            pokazWolne(googleMap)
         }
     }
-    private fun pokazWolne(mMap: GoogleMap, mClosestMarker: Marker)
-    {
+    private var najblizszyMarker: Marker? = null
+    private fun pokazWolne(mMap: GoogleMap) {
         val buttonMapaZlokalizuj = view?.findViewById(R.id.mapa_zlokalizuj) as ImageButton
         buttonMapaZlokalizuj.setOnClickListener {
-            Log.d("komunikat", "Przycisk")
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mClosestMarker.position, 19F))
+            var licznik = 0
+            for (i in mMarkerArray)
+            {
+                val distance = FloatArray(1)
+                Location.distanceBetween(
+                    getLastKnownLocation().latitude,
+                    getLastKnownLocation().longitude, i.position.latitude,
+                    i.position.longitude, distance
+                )
+                if (licznik == 0) {
+                    mindist = distance[0]
+                    najblizszyMarker = i
+                }
+                else if (mindist > distance[0]) {
+                    mindist = distance[0]
+                    najblizszyMarker = i
+                }
+                licznik++
+            }
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(najblizszyMarker!!.position, 19F))
         }
     }
 
@@ -119,6 +119,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         btnZaparkuj.visibility = View.VISIBLE
         return false
     }
+
     override fun onMapClick(p0: LatLng) {
         val btnZaparkuj = view?.findViewById(R.id.zaparkuj) as Button
         btnZaparkuj.visibility = View.GONE

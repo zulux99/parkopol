@@ -153,7 +153,7 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 return true
             }
             R.id.nav_oplac -> {
-
+                Toast.makeText(this, "Tu wstępu nie ma :)", Toast.LENGTH_LONG).show()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -188,7 +188,7 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.Miejs
             }
 
             override fun onCancelled(error: DatabaseError) {
-//                TODO "Not yet implemented"
+
             }
         })
     return listaLokalizacji
