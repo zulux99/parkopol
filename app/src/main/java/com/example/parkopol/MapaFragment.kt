@@ -12,9 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import com.example.parkopol.databinding.FragmentMapaBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -23,6 +23,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import org.json.JSONArray
+import org.json.JSONException
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
@@ -30,7 +34,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private val REQUEST_LOCATION = 123
     private var mapView: MapView? = null
     private var aktualnaLokalizacja = LatLng(0.0, 0.0)
-    private var latlng: LatLng? = null
     private var builder = LatLngBounds.Builder()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,29 +50,40 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         // Set the map ready callback to receive the GoogleMap object
         mapView!!.getMapAsync(this)
 //        getLastKnownLocation()
-        buttonMapaZlokalizuj.setOnClickListener {
-            Log.d("komunikat", "Przycisk")
-        }
         return view
     }
 
-
+    private var mClosestMarker: Marker? = null
+    private var mindist = 0f
     override fun onMapReady(googleMap: GoogleMap?) {
         googleMap?.mapType = GoogleMap.MAP_TYPE_HYBRID
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
         // listaLokalizacji.add(0, KontoFragment.MiejsceParkingowe(false,false,"wlascielkasd",LatLng(-33.1,151.2),1.8))
-        for (i in listaLokalizacji) {
+        for ((licznik, i) in listaLokalizacji.withIndex()) {
 
             val marker = googleMap?.addMarker(
                 MarkerOptions()
                     .position(i.lokalizacja)
-                    .title("Wolne miejsce")
+                    .title("Wolne$licznik")
             )
-            val address = listaLokalizacji[0]
-            latlng = LatLng(address.lokalizacja!!.latitude, address.lokalizacja!!.longitude)
             builder.include(marker!!.position)
             googleMap.setOnMarkerClickListener(this)
+            val distance = FloatArray(1)
+            if (i.lokalizacja != null) {
+                Location.distanceBetween(
+                    getLastKnownLocation().latitude,
+                    getLastKnownLocation().longitude, i.lokalizacja!!.latitude,
+                    i.lokalizacja!!.longitude, distance
+                )
+            }
+            if (licznik == 0)
+                mindist = distance[0]
+            else if (mindist > distance[0]) {
+                mindist = distance[0]
+                mClosestMarker = marker
+            }
         }
+        Log.d("komunikat", mClosestMarker?.title + " " + mindist)
         if (ActivityCompat.checkSelfPermission(
                 context!!.applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -86,10 +100,21 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val bounds = builder.build()
         val cu = CameraUpdateFactory.newLatLngBounds(bounds, 0)
         googleMap?.animateCamera(cu)
+        if (googleMap != null && mClosestMarker != null) {
+            pokazWolne(googleMap, mClosestMarker!!)
+        }
+    }
+    private fun pokazWolne(mMap: GoogleMap, mClosestMarker: Marker)
+    {
+        val buttonMapaZlokalizuj = view?.findViewById(R.id.mapa_zlokalizuj) as ImageButton
+        buttonMapaZlokalizuj.setOnClickListener {
+            Log.d("komunikat", "Przycisk")
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mClosestMarker.position, 19F))
+        }
     }
 
+
     override fun onMarkerClick(marker: Marker): Boolean {
-        Log.d("komunikat", "Pinezka")
         val btnZaparkuj = view?.findViewById(R.id.zaparkuj) as Button
         btnZaparkuj.visibility = View.VISIBLE
         return false
@@ -108,14 +133,12 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         )
     }
 
-    private fun getLastKnownLocation() {
+    private fun getLastKnownLocation(): LatLng {
         val locationManager: LocationManager =
             context?.getSystemService(LOCATION_SERVICE) as LocationManager
         val providers: List<String> = locationManager.getProviders(true)
         var location: Location? = null
-        Log.d("komunikat", "getLastKnownLocation 1")
         for (i in providers.size - 1 downTo 0) {
-            Log.d("komunikat", "getLastKnownLocation 2")
             if (ActivityCompat.checkSelfPermission(
                     activity!!.applicationContext,
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -124,15 +147,12 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                Log.d("komunikat", "getLastKnownLocation 3")
-                return
+                return LatLng(0.0, 0.0)
             }
-            Log.d("komunikat", "getLastKnownLocation 4")
             location = locationManager.getLastKnownLocation(providers[i])
             if (location != null)
                 break
         }
-        Log.d("komunikat", "getLastKnownLocation 5")
         val gps = DoubleArray(2)
         if (location != null) {
             gps[0] = location.latitude
@@ -141,7 +161,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             Log.d("komunikat", gps[0].toString())
             Log.d("komunikat", gps[1].toString())
         }
-        return
+        return aktualnaLokalizacja
     }
 
     override fun onResume() {
