@@ -125,9 +125,9 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val btnZaparkuj = view?.findViewById(R.id.zaparkuj) as Button
         btnZaparkuj.setOnClickListener{
         Log.d("komunikat_ID", marker.getTag().toString())
-        zmianaStanu(marker.getTag().toString(),true)
+        zmianaStanu(marker.getTag().toString(),true,"")
         Zaparkowanie(FirebaseAuth.getInstance().currentUser!!.uid,marker!!.getTag().toString(), SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-            Locale.GERMAN).format(Date()),"0" , 0.0 ).dodawanieDobazy()
+            Locale.GERMAN).format(Date()),"0" , 0.0 ,"").dodawanieDobazy()
         val intent = Intent(activity, SecondActivity::class.java)
         startActivity(intent)
         }
