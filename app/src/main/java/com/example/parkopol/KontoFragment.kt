@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
@@ -29,8 +30,7 @@ class KontoFragment : Fragment() {
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
         val myView = inflater.inflate(R.layout.fragment_konto, container, false)
         val button = myView.findViewById(R.id.konto_usun) as Button
-        val inputLokalicacja1 = myView.findViewById(R.id.Lokalizacja_1) as EditText
-        val inputLokalicacja2 = myView.findViewById(R.id.lokalicacja2) as EditText
+        val kontoLokalicacja = myView.findViewById(R.id.kontoLokalicacja) as EditText
         val niepelnosprawni = myView.findViewById(R.id.kontoCheckBoxNiePS) as CheckBox
         val inputOpis = myView.findViewById(R.id.kontoOpis) as EditText
         val inputCena = myView.findViewById(R.id.kontoCena) as EditText
@@ -44,8 +44,7 @@ class KontoFragment : Fragment() {
         nowyParkingbutton.setOnClickListener {
             Log.d("komunikat", "nowyParking0")
             nowyParking(
-                inputLokalicacja1.text.toString().toDouble(),
-                inputLokalicacja2.text.toString().toDouble(),
+                kontoLokalicacja.text.toString(),
                 niepelnosprawni.isChecked,
                 inputOpis.text.toString(),
                 //  inputCena.text.toString(),
@@ -90,12 +89,13 @@ class KontoFragment : Fragment() {
     }
 
     private fun nowyParking(
-        inputLokalicacja1: Double,
-        inputLokalicacja2: Double,
+        kontoLokalicacja: String,
         niepelnosprawni: Boolean,
         inputOpis: String,
         //inputCena: String,
     ) {
+        Log.e("tablica", "|"+kontoLokalicacja)
+
 //      val  test = Zaparkowanie("abc","idmiejsca",
 //          SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN).format(Date()),
 //           SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.GERMAN).format(Date()).plus(Calendar.HOUR),0.1
@@ -104,11 +104,17 @@ class KontoFragment : Fragment() {
         val database =
             FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
         val myRef = database.getReference("MiejsceParkingowe")
-        val lokalicajca = LatLng(inputLokalicacja1, inputLokalicacja2)
+       val partkontoLokalicacja= kontoLokalicacja.split(",")
+        if (partkontoLokalicacja[1]==null){
+            return
+        }
+        val lokalicajca = LatLng(partkontoLokalicacja[0].toDouble(), partkontoLokalicacja[1].toDouble())
+        Log.e("tablica", "lokalicajcaja"+lokalicajca.toString())
         for (i in listaLokalizacji) {
             Log.d("tablica", "tablica0: ${i.idwlasciciela} ")
             if (lokalicajca == i.lokalizacja) {
                 Log.e("tablica", "nie dodawanie")
+                Toast.makeText(context, "Taka Lokalizacja już istnieje", Toast.LENGTH_SHORT).show()
                 return
             }
         }
@@ -126,6 +132,8 @@ class KontoFragment : Fragment() {
                 inputOpis
             )
         )
+
+        Toast.makeText(context, "Dodano pomyslnie", Toast.LENGTH_SHORT).show()
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
     }
 }
