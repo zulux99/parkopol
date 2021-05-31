@@ -35,15 +35,17 @@ import kotlin.collections.ArrayList
 
 class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
-    var aktywnyZaparkowanie : Boolean= sprawdzZaparkowanie(FirebaseAuth.getInstance().currentUser!!.uid)
+  // private var listaZaparkowan = tablicaZaparkowanie();
+   // var aktywnyZaparkowanie : Boolean= sprawdzZaparkowanie(FirebaseAuth.getInstance().currentUser!!.uid)
     private lateinit var drawer: DrawerLayout
     private lateinit var binding: ActivitySecondBinding
 
     //    private lateinit var fragmentKontoBinding: FragmentKontoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
 
-        super.onCreate(savedInstanceState)
+        Log.d("komunikat1", "2")
+        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
+        super.onCreate(savedInstanceState);
         binding = ActivitySecondBinding.inflate(layoutInflater)
         val headerBinding = NavHeaderBinding.bind(binding.navView.getHeaderView(0))
 //        fragmentKontoBinding = FragmentKontoBinding.inflate(layoutInflater)
@@ -131,14 +133,16 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_mapa -> {
-                if (aktywnyZaparkowanie){
+                if (true){
                     Log.d("komunkat", "true")
+                 //   Log.d("komunkat", "rozmiar"+ listaZaparkowan.size.toString())
                     listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, MapaFragment()).commit()
                     drawer.closeDrawer(GravityCompat.START)
                 }else{
                     Log.d("komunkat", "false")
+
                 }
 
 
@@ -180,22 +184,25 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.Miejs
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (spotLatLng: DataSnapshot in dataSnapshot.children) {
-                        listaLokalizacji.add(
-                            KontoFragment.MiejsceParkingowe(
-                                spotLatLng.child("stan").value.toString().toBoolean(),
-                                spotLatLng.child("mNiPelSprawnych").value.toString().toBoolean(),
-                                spotLatLng.child("idwlasciciela").value.toString(),
-                                LatLng(
-                                    spotLatLng.child("lokalizacja/latitude/").value.toString()
-                                        .toDouble(),
-                                    spotLatLng.child("lokalizacja/longitude/").value.toString()
-                                        .toDouble()
-                                ),
-                                spotLatLng.child("cena").value.toString().toDouble(),
-                                spotLatLng.child("opis").value.toString(),
-                                spotLatLng.key.toString()
+                        if ( !spotLatLng.child("stan").value.toString().toBoolean()) {
+                            listaLokalizacji.add(
+                                KontoFragment.MiejsceParkingowe(
+                                    spotLatLng.child("stan").value.toString().toBoolean(),
+                                    spotLatLng.child("mNiPelSprawnych").value.toString()
+                                        .toBoolean(),
+                                    spotLatLng.child("idwlasciciela").value.toString(),
+                                    LatLng(
+                                        spotLatLng.child("lokalizacja/latitude/").value.toString()
+                                            .toDouble(),
+                                        spotLatLng.child("lokalizacja/longitude/").value.toString()
+                                            .toDouble()
+                                    ),
+                                    spotLatLng.child("cena").value.toString().toDouble(),
+                                    spotLatLng.child("opis").value.toString(),
+                                    spotLatLng.key.toString()
+                                )
                             )
-                        )
+                        }
                         Log.d("bazaDoTablcy", "${spotLatLng.key}")
                     }
                 }
@@ -207,6 +214,47 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.Miejs
         })
     return listaLokalizacji
 }
+fun tablicaZaparkowanie(): ArrayList<Zaparkowanie> {
+    Log.d("tablicaZaparkowanieKey", "1")
+//todo:nie wiem dlaczego fukcja wykonuje sie w chuj razy
+     val listaZaparkowanie: ArrayList<Zaparkowanie> = ArrayList()
+    val database =
+        FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+    database.getReference("Zaparkowanie/").orderByChild("idOsobyParkujacej")
+        .addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (spotLatLng: DataSnapshot in dataSnapshot.children) {
+                        if(FirebaseAuth.getInstance().currentUser!!.uid==spotLatLng.child("idOsobyParkujacej").value.toString()) {
+                            tablicaZaparkowanie().add(
+                                Zaparkowanie(
+                                    spotLatLng.child("idMiejsceParkingowe").value.toString(),
+                                    spotLatLng.child("idOsobyParkujacej").value.toString(),
+                                    spotLatLng.child("koniecZaparkowania").value.toString(),
+                                    spotLatLng.child("startZaparkowania").value.toString(),
+                                    spotLatLng.child("koszt").value.toString().toDouble()
+
+                                )
+                            )
+                           Log.d("tablicaZaparkowanieKey", "${spotLatLng.key}")
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    return listaZaparkowanie
+}
+//val database =
+//    FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+//database.getReference("Zaparkowanie/").orderByChild("idOsobyParkujacej").equalTo(FirebaseAuth.getInstance().currentUser!!.uid).indexOn("idOsobyParkujacej").get().addOnSuccessListener {
+//    Log.i("firebase", "Got value ${it.value}")
+//}.addOnFailureListener{
+//    Log.e("firebase", "Error getting data", it)
+//}
 // Przyład dodawania
 //var test =Zaparkowanie("testyidOsp","idmiejscaparkingopwego", LocalDateTime.now(),
 //            LocalDateTime.now().plusHours(2),22.4);
