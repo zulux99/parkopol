@@ -141,15 +141,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         btnZaparkuj.visibility = View.GONE
     }
 
-    private fun dodowanieMarker(googleMap: GoogleMap?) {
-        val sydney = LatLng(-33.852, 151.211)
-        googleMap!!.addMarker(
-            MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney")
-        )
-    }
-
     private fun getLastKnownLocation(): LatLng {
         val locationManager: LocationManager =
             context?.getSystemService(LOCATION_SERVICE) as LocationManager
