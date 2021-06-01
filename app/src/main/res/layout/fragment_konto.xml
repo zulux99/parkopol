@@ -12,6 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:fontFamily="@font/holtwoodone"
+        android:textColor="@color/white"
         android:layout_marginEnd="288dp"
         android:layout_marginBottom="660dp"
         android:backgroundTint="@color/pomaranczowy"
@@ -22,6 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:fontFamily="@font/holtwoodone"
+        android:textColor="@color/white"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="224dp"
         android:backgroundTint="@color/pomaranczowy"
@@ -33,7 +37,9 @@
         android:id="@+id/nowyParking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/holtwoodone"
         android:layout_alignParentTop="true"
+        android:textColor="@color/white"
         android:layout_alignParentEnd="true"
         android:backgroundTint="@color/pomaranczowy"
         android:layout_marginTop="397dp"
@@ -44,6 +50,8 @@
         android:id="@+id/kontoUsunparking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/holtwoodone"
+        android:textColor="@color/white"
         android:layout_alignParentTop="true"
         android:backgroundTint="@color/pomaranczowy"
         android:layout_alignParentEnd="true"
@@ -80,6 +88,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/pomaranczowy"
+        android:textColor="@color/white"
+        android:fontFamily="@font/holtwoodone"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="255dp"
@@ -112,6 +122,5 @@
         android:inputType="numberDecimal" />
 
 
-    <!--    Dupa300 -->
 
 </RelativeLayout>

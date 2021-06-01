@@ -21,10 +21,11 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/mapa_zlokalizuj"
             android:layout_marginBottom="40dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/holtwoodone"
             android:layout_centerHorizontal="true"
             app:backgroundTint="@color/pomaranczowy"
             android:text="Zaparkuj"
-            android:textColor="@color/black"
             android:visibility="gone" />
 
         <ImageButton

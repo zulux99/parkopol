@@ -6,4 +6,6 @@
     <string name="navigation_drawer_open">Otwórz menu nawigacji</string>
     <string name="navigation_drawer_close">Otwórz menu nawigacji</string>
     <string name="usu_konto">Usuń konto</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
