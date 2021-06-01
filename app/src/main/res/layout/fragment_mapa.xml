@@ -15,27 +15,35 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <ImageButton
-            android:id="@+id/mapa_zlokalizuj"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/round_corners"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:padding="5dp"
-            android:src="@drawable/ic_gps_fixed" />
-
         <Button
             android:id="@+id/zaparkuj"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/mapa_zlokalizuj"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="164dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="40dp"
+            android:layout_centerHorizontal="true"
+            app:backgroundTint="@color/pomaranczowy"
             android:text="Zaparkuj"
-            android:visibility="gone"/>
+            android:textColor="@color/black"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/mapa_zlokalizuj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/pomaranczowy"
+            android:layout_above="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/round_corners"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_gps_fixed" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
 </FrameLayout>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
+    android:background="@color/tlo"
     android:id="@+id/fragment_konto">
 
     <Button
@@ -14,6 +14,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="288dp"
         android:layout_marginBottom="660dp"
+        android:backgroundTint="@color/pomaranczowy"
         android:text="@string/usu_konto" />
 
     <Button
@@ -23,6 +24,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="224dp"
+        android:backgroundTint="@color/pomaranczowy"
         android:layout_marginBottom="587dp"
         android:text="Zgłoś swój parking"
         tools:ignore="HardcodedText" />
@@ -33,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:backgroundTint="@color/pomaranczowy"
         android:layout_marginTop="397dp"
         android:layout_marginEnd="259dp"
         android:text="Zapisz parking" />
@@ -42,6 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:backgroundTint="@color/pomaranczowy"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="398dp"
         android:layout_marginEnd="26dp"
@@ -52,6 +56,7 @@
         android:layout_width="371dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:backgroundTint="@color/pomaranczowy"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="190dp"
         android:layout_marginEnd="21dp"
@@ -68,12 +73,13 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="262dp"
         android:layout_marginEnd="5dp"
-        android:text="dla nie pełnosprawych" />
+        android:text="Dla niepełnosprawnych" />
 
     <Button
         android:id="@+id/kontoMapaDuza"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/pomaranczowy"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="255dp"
@@ -87,6 +93,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="334dp"
+        android:backgroundTint="@color/pomaranczowy"
         android:layout_marginEnd="195dp"
         android:ems="10"
         android:inputType="textPersonName"
@@ -96,6 +103,7 @@
         android:id="@+id/kontoCena"
         android:layout_width="154dp"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/pomaranczowy"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="316dp"

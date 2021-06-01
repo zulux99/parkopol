@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:background="#555">
+    android:background="#ff8c00">
 
     <ImageView
         android:id="@+id/nav_avatar"

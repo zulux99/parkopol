@@ -36,19 +36,18 @@ import kotlin.collections.ArrayList
 
 class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
-   private var listaZaparkowan = ArrayList<Zaparkowanie>()
-
+    private var listaZaparkowan = ArrayList<Zaparkowanie>()
    // var aktywnyZaparkowanie : Boolean= sprawdzZaparkowanie(FirebaseAuth.getInstance().currentUser!!.uid)
     private lateinit var drawer: DrawerLayout
     private lateinit var binding: ActivitySecondBinding
 
     //    private lateinit var fragmentKontoBinding: FragmentKontoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-        var secondZaZaparkowanieButton = this.findViewById(R.id.secondZaZaparkowanie) as Button
-        secondZaZaparkowanieButton.setOnClickListener{
-            listaZaparkowan
-            zmianaStanu(listaZaparkowan.last().idMiejsceParkingowe,false,listaZaparkowan.last().idZap)
-        }
+//        val secondZaZaparkowanieButton = this.findViewById(R.id.secondZaZaparkowanie) as Button
+//        secondZaZaparkowanieButton.setOnClickListener{
+//            listaZaparkowan
+//            zmianaStanu(listaZaparkowan.last().idMiejsceParkingowe,false,listaZaparkowan.last().idZap)
+//        }
         listaZaparkowan= tablicaZaparkowanie(listaZaparkowan)
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
         super.onCreate(savedInstanceState);
