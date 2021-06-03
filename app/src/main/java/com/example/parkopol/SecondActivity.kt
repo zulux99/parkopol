@@ -328,7 +328,9 @@ data class Zaparkowanie(
 fun zmianaStanu(
     idMParkingowego: String,
     stan: Boolean,
-    idZap: String
+    idZap: String,
+    cena: Double,
+    startZaparkowania: String
 ) {
     Log.d("zmianaStanu","idMP: "+idMParkingowego.toString()+" stan: "+stan.toString()+" idzap: "+idZap)
     val database =
@@ -338,7 +340,20 @@ fun zmianaStanu(
 
 
 if (stan==false) {
-    database.getReference("Zaparkowanie/").child(idZap).child("koniecZaparkowania").setValue(SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN).format(Date()))
+
+    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN)
+    val koniec = formatter.format(Date())
+    val start = formatter.parse(startZaparkowania)
+    var koszt = 0.0
+    if (cena!=0.0) {
+
+       // val roznica = koniec.getTime() - start.getTime()
+
+        koszt=10.2;
+        //Log.d("zmianaStanu","k"+koszt+" r:"+roznica)
+    }
+    database.getReference("Zaparkowanie/").child(idZap).child("koniecZaparkowania").setValue(koniec)
+    database.getReference("Zaparkowanie/").child(idZap).child("koszt").setValue(koszt)
 
 }
 

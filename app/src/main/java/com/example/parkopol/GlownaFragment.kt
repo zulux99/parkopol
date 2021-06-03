@@ -12,7 +12,7 @@ import android.widget.Toast
 
 
 class GlownaFragment : Fragment() {
-    //var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
+    var listaLokalizacji = ArrayList<DodajParkingFragment.MiejsceParkingowe>()
     private var listaZaparkowan = ArrayList<Zaparkowanie>()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,18 +21,29 @@ class GlownaFragment : Fragment() {
     ): View? {
 
         listaZaparkowan= tablicaZaparkowanie(listaZaparkowan)
-       // listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
+        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
         Log.d("glowna","lista: "+listaZaparkowan.toString())
         val myView = inflater.inflate(R.layout.fragment_glowna, container, false)
         val zakonczParkowanieButton = myView.findViewById(R.id.zakoncz_parkowanie) as Button
         zakonczParkowanieButton.setOnClickListener()
         {
+            var temp = listaZaparkowan.findLast { it.koniecZaparkowania == "0" }
+            if (temp!=null ) {
 
-            if (listaZaparkowan.any{ it.koniecZaparkowania=="0" }) {
+                val test =  listaLokalizacji.findLast { it.idMParkingowego == temp.idMiejsceParkingowe}
+                var cena = 0.0
+                var  start = "0"
+                if (test!=null){
+                    cena=test.cena
+
+                }
+                start=temp.startZaparkowania
                 zmianaStanu(
-                    listaZaparkowan.findLast { it.koniecZaparkowania == "0" }!!.idMiejsceParkingowe,
+                    temp.idMiejsceParkingowe,
                     false,
-                    listaZaparkowan.findLast { it.koniecZaparkowania == "0" }!!.idZap
+                    temp.idZap,
+                    cena,
+                    start
                 )
                 Toast.makeText(context, "Zakończono parkowanie", Toast.LENGTH_SHORT).show()
                 listaZaparkowan.clear()

@@ -27,11 +27,17 @@ import com.squareup.picasso.Picasso
 
 class KontoFragment : Fragment() {
     private lateinit var kontoBinding: FragmentKontoBinding
+    private var listaSamochod = ArrayList<Samochod>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val tablicaSamochody = ArrayList<String>()
+        listaSamochod= tablicaSamochody()
+
+        val listaSamochody: ArrayList<Samochod> = ArrayList()
         val myView = inflater.inflate(R.layout.fragment_konto, container, false)
         val ListaSamochody: ListView = myView.findViewById(R.id.kontoListaSamochody)
         kontoBinding = FragmentKontoBinding.bind(myView)
@@ -58,10 +64,32 @@ class KontoFragment : Fragment() {
                 .setNegativeButton("Anuluj", dialogClickListener).show()
         }
         zapisz_samochodButton.setOnClickListener{
-            //samochod(FirebaseAuth.getInstance().currentUser!!.uid,)
+            var ok = true;
+            if (samochod_nRejInPut.text.toString().length==0){
+                ok=false
+                Toast.makeText(context, "Nr rejestracyjny jest pusty", Toast.LENGTH_SHORT).show()
+            }
+            if (samochod_nazwaInPut.text.toString().length==0){
+                ok=false
+                Toast.makeText(context, "Nazwa jest pusty", Toast.LENGTH_SHORT).show()
+            }
+            if(ok){
+                val samNazwa= samochod_nazwaInPut.text.toString()
+                val samRej= samochod_nRejInPut.text.toString()
+                Samochod(FirebaseAuth.getInstance().currentUser!!.uid,samRej,samNazwa,"").dodawanieDobazy()
+
+                tablicaSamochody.add(samNazwa+" "+samRej)
+                        val arrayAdapter = ArrayAdapter(context!!, R.layout.custom_textview, tablicaSamochody)
+                       ListaSamochody.adapter = arrayAdapter
+                samochod_nRejInPut.setText("")
+                samochod_nazwaInPut.setText("")
+                Toast.makeText(context, "Samochód został Dodany", Toast.LENGTH_SHORT).show()
+                kontoBinding.samochodNazwa.visibility = View.GONE
+                kontoBinding.samochodNrRejestracyjny.visibility = View.GONE
+                kontoBinding.zapiszSamochod.visibility = View.GONE
+        }
         }
         kontoBinding.dodajSamochod.setOnClickListener {
-            Toast.makeText(context, "Teścik", Toast.LENGTH_SHORT).show()
             if (kontoBinding.zapiszSamochod.visibility == View.GONE) {
                 kontoBinding.samochodNazwa.visibility = View.VISIBLE
                 kontoBinding.samochodNrRejestracyjny.visibility = View.VISIBLE
@@ -79,10 +107,38 @@ class KontoFragment : Fragment() {
             Log.d("komunikat", "google avatar url: " + signInAccount.photoUrl.toString())
             Picasso.get().load(signInAccount.photoUrl.toString()).into(kontoBinding.navAvatar)
         }
-        val tablicaSamochody = ArrayList<String>()
-        tablicaSamochody.add("Samochód test")
-        var arrayAdapter = ArrayAdapter(context!!, R.layout.custom_textview, tablicaSamochody)
-        ListaSamochody.adapter = arrayAdapter
+        Log.d("tablicaSamochody", "1")
+        val database =
+            FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+        database.getReference("samochod/").get()
+            .addOnSuccessListener {
+                Log.i("tablicaSamochody", "wartosci ${it.value}")
+                if (it.exists()) {
+                    for (spotLatLng: DataSnapshot in it.children) {
+                        if (FirebaseAuth.getInstance().currentUser!!.uid == spotLatLng.child("idWlasciciela").value.toString()) {
+
+                            tablicaSamochody.add(
+                                spotLatLng.child(
+                                    "nazwasamochod"
+                                ).value.toString() + " " +
+                                        spotLatLng.child("nrRejestracyjny").value.toString()
+                            )
+                        }
+                            Log.d("tablicaSamochody", "${spotLatLng.key}")
+
+                    }
+                    val arrayAdapter = ArrayAdapter(context!!, R.layout.custom_textview, tablicaSamochody)
+                    ListaSamochody.adapter = arrayAdapter
+                }
+
+            }.addOnFailureListener {
+                Log.e("tablicaSamochody", "bląd", it)
+            }
+
+
+//        tablicaSamochody.add("nazwasamochod | nrRejestracyjny")
+//        val arrayAdapter = ArrayAdapter(context!!, R.layout.custom_textview, tablicaSamochody)
+//        ListaSamochody.adapter = arrayAdapter
         return myView
     }
 
@@ -106,7 +162,7 @@ class KontoFragment : Fragment() {
 
 
 
-data class samochod(
+data class Samochod(
     var idWlasciciela: String="",
     var nrRejestracyjny: String="",
     var nazwasamochod: String="",
@@ -115,11 +171,11 @@ data class samochod(
 fun dodawanieDobazy(){
     val database =
         FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
-    val myRef = database.getReference("Zaparkowanie")
+    val myRef = database.getReference("samochod")
 
     val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
     myRef.child(id.toString()).setValue(
-        samochod(
+        Samochod(
             this.idWlasciciela,
             this.nrRejestracyjny,
             this.nazwasamochod,
@@ -129,8 +185,8 @@ fun dodawanieDobazy(){
 }
 }
 
-fun tablicaSamochody( listaSamochody: ArrayList<samochod> = ArrayList()): ArrayList<samochod> {
-
+fun tablicaSamochody( ): ArrayList<Samochod> {
+    val listaSamochody: ArrayList<Samochod> = ArrayList()
     Log.d("tablicaSamochody", "1")
     val database =
         FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
@@ -139,9 +195,8 @@ fun tablicaSamochody( listaSamochody: ArrayList<samochod> = ArrayList()): ArrayL
             Log.i("tablicaSamochody", "wartosci ${it.value}")
             if (it.exists()) {
                 for (spotLatLng: DataSnapshot in it.children) {
-                    if (FirebaseAuth.getInstance().currentUser!!.uid == spotLatLng.child("idOsobyParkujacej").value.toString()) {
-                        listaSamochody.add(
-                            samochod(
+                       listaSamochody.add(
+                            Samochod(
                                 spotLatLng.child("idWlasciciela").value.toString(),
                                 spotLatLng.child("nrRejestracyjny").value.toString(),
                                 spotLatLng.child("nazwasamochod").value.toString(),
@@ -150,7 +205,7 @@ fun tablicaSamochody( listaSamochody: ArrayList<samochod> = ArrayList()): ArrayL
                             )
                         )
                         Log.d("tablicaSamochody", "${spotLatLng.key}")
-                    }
+
                 }
             }
 
