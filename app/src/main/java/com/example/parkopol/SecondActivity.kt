@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +32,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.log
 
 class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var listaLokalizacji = ArrayList<DodajParkingFragment.MiejsceParkingowe>()
@@ -47,8 +49,10 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 //            listaZaparkowan
 //            zmianaStanu(listaZaparkowan.last().idMiejsceParkingowe,false,listaZaparkowan.last().idZap)
 //        }
+
         listaZaparkowan= tablicaZaparkowanie(listaZaparkowan)
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
+
         super.onCreate(savedInstanceState);
         binding = ActivitySecondBinding.inflate(layoutInflater)
         val headerBinding = NavHeaderBinding.bind(binding.navView.getHeaderView(0))
@@ -130,6 +134,8 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
+
         when (item.itemId) {
             R.id.nav_glowna -> {
                 supportFragmentManager.beginTransaction()
@@ -138,10 +144,13 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 return true
             }
             R.id.nav_mapa -> {
-                Log.d("komunkat", "rozmiar"+ listaZaparkowan.size.toString())
+               // listaZaparkowan.clear()
+                listaZaparkowan = tablicaZaparkowanie(listaZaparkowan)
+
+                Log.d("komunkat", "rozmiar"+ listaZaparkowan.size.toString()+" id:"+listaZaparkowan.findLast {it.koniecZaparkowania == "0"  }?.idZap)
                 if (!(listaZaparkowan.any { it.koniecZaparkowania == "0" })){
                     Log.d("komunkat", "true")
-                    Log.d("komunkat", "rozmiar"+ listaZaparkowan.size.toString())
+
                     listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, MapaFragment()).commit()
@@ -321,21 +330,16 @@ fun zmianaStanu(
     stan: Boolean,
     idZap: String
 ) {
+    Log.d("zmianaStanu","idMP: "+idMParkingowego.toString()+" stan: "+stan.toString()+" idzap: "+idZap)
     val database =
         FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
 
-    database.getReference("MiejsceParkingowe/").updateChildren(hashMapOf<String, Any>(
-        ("/${idMParkingowego}/stan" to stan)!!
-    ))
+    database.getReference("MiejsceParkingowe/").child(idMParkingowego).child("stan").setValue(stan)
+
+
 if (stan==false) {
-    database.getReference("Zaparkowanie/").updateChildren(
-        hashMapOf<String, Any>(
-            ("/${idZap}/koniecZaparkowania" to SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss",
-                Locale.GERMAN
-            ).format(Date()))!!
-        )
-    )
+    database.getReference("Zaparkowanie/").child(idZap).child("koniecZaparkowania").setValue(SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN).format(Date()))
+
 }
 
 
