@@ -65,12 +65,19 @@
         android:textColor="@color/white"
         android:visibility="visible" />
 
+    <View
+        android:id="@+id/linia1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/konto_usun"
+        android:background="#FFFFFF" />
+
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/konto_usun"
+        android:layout_below="@+id/linia1"
         android:fontFamily="@font/holtwoodone"
         android:text="Twoje samochody"
         android:textColor="@color/white"

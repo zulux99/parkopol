@@ -1,5 +1,6 @@
 package com.example.parkopol
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -80,7 +81,7 @@ class KontoFragment : Fragment() {
         }
         val tablicaSamochody = ArrayList<String>()
         tablicaSamochody.add("Samochód test")
-        var arrayAdapter = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, tablicaSamochody)
+        var arrayAdapter = ArrayAdapter(context!!, R.layout.custom_textview, tablicaSamochody)
         ListaSamochody.adapter = arrayAdapter
         return myView
     }
