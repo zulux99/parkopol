@@ -27,7 +27,7 @@
                 android:fontFamily="@font/holdwoodonesc"
                 android:textSize="35dp"
                 android:textAlignment="center"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="52dp"
                 android:layout_height="wrap_content"
                 android:text="ParkoPol" />
         </androidx.appcompat.widget.Toolbar>

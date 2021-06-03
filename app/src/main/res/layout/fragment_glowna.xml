@@ -5,4 +5,12 @@
     android:background="@color/tlo"
     android:id="@+id/fragment_historia">
 
+    <Button
+        android:id="@+id/zakoncz_parkowanie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/holtwoodone"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/pomaranczowy"
+        android:text="Zakończ parkowanie" />
 </RelativeLayout>

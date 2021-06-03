@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DodajParkingFragment">
+
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/holtwoodone"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/pomaranczowy"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:text="Dodaj miejsce parkingowe" />
+
+    <EditText
+        android:id="@+id/kontoLokalicacja"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView3"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/pomaranczowy"
+        android:digits="0123456789.,"
+        android:ems="10"
+        android:textColorHint="#666"
+        android:hint="Lokalizacja np.: 16.86966,51.79193"
+        android:inputType="numberDecimal|numberDecimal" />
+
+    <EditText
+        android:id="@+id/kontoCena"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="#666"
+        android:layout_below="@+id/kontoLokalicacja"
+        android:backgroundTint="@color/pomaranczowy"
+        android:hint="Cena np.: 1.50"
+        android:ems="10"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/kontoOpis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/kontoCena"
+        android:layout_margin="20dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/pomaranczowy"
+        android:textColorHint="#666"
+        android:ems="10"
+        android:hint="Opis np.: Wrocław, ul. Zielona - Sklep Żabka"
+        android:inputType="textPersonName" />
+
+    <CheckBox
+        android:id="@+id/kontoCheckBoxNiePS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/kontoOpis"
+        android:layout_margin="20dp"
+        android:textColor="@color/white"
+        android:text="Miejsce parkingowe dla niepełnosprawnych" />
+
+
+    <Button
+        android:id="@+id/nowyParking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:padding="20dp"
+        android:layout_below="@+id/kontoCheckBoxNiePS"
+        android:backgroundTint="@color/pomaranczowy"
+        android:fontFamily="@font/holtwoodone"
+        android:text="Zapisz parking"
+        android:textColor="@color/white" />
+</RelativeLayout>

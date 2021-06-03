@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
 
 class HistoriaFragment: Fragment() {
      var listaZaparkowan = ArrayList<Zaparkowanie>()
-    private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
+    private var listaLokalizacji = ArrayList<DodajParkingFragment.MiejsceParkingowe>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,7 +25,7 @@ class HistoriaFragment: Fragment() {
     ): View? {
         Log.e("komunikatHis", "Start")
         //listaZaparkowan= tablicaZaparkowanie(listaZaparkowan)
-        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
+        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
         val myView = inflater.inflate(R.layout.fragment_historia, container, false)
         val listaParkowan: ListView = myView.findViewById(R.id.lista_parkowan)
         val tablicaParkowan = ArrayList<String>()
