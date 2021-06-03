@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_konto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/tlo"
-    android:id="@+id/fragment_konto">
+    android:background="@color/tlo">
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:paddingTop="10dp"
-        android:layout_marginTop="0dp"
-        android:textSize="25dp"
-        android:fontFamily="@font/holtwoodone"
-        android:textColor="@color/white"
         android:layout_centerHorizontal="true"
-        android:text="Zalogowany jako" />
+        android:layout_marginTop="0dp"
+        android:fontFamily="@font/holtwoodone"
+        android:paddingTop="10dp"
+        android:text="Zalogowany jako"
+        android:textColor="@color/white"
+        android:textSize="25dp" />
 
     <ImageView
         android:id="@+id/nav_avatar"
@@ -35,10 +35,10 @@
         android:layout_below="@+id/nav_avatar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:textColor="@color/white"
-        android:textSize="20dp"
         android:text="Imię i nazwisko"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
 
     <TextView
         android:id="@+id/adres_email"
@@ -47,9 +47,9 @@
         android:layout_below="@+id/imie_nazwisko"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
+        android:text="E-mail"
         android:textColor="#999"
-        android:textSize="15dp"
-        android:text="E-mail" />
+        android:textSize="15dp" />
 
     <Button
         android:id="@+id/konto_usun"
@@ -59,8 +59,8 @@
         android:backgroundTint="@color/pomaranczowy"
         android:fontFamily="@font/holtwoodone"
         android:text="@string/usu_konto"
-        android:visibility="gone"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/textView5"
@@ -68,16 +68,71 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/adres_email"
         android:layout_centerHorizontal="true"
-        android:fontFamily="@font/holtwoodone"
         android:layout_marginTop="30dp"
+        android:fontFamily="@font/holtwoodone"
         android:text="Twoje samochody"
         android:textColor="@color/white"
-        android:textSize="25dp" />
+        android:textSize="25sp" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
-        android:layout_below="@+id/textView5" />
+        android:visibility="visible"
+        android:layout_below="@+id/zapisz_samochod"/>
+
+    <Button
+        android:id="@+id/dodaj_samochod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:layout_below="@+id/textView5"
+        android:backgroundTint="@color/pomaranczowy"
+        android:fontFamily="@font/holtwoodone"
+        android:text="Dodaj samochód"
+        android:textColor="@color/white" />
+    <Button
+        android:id="@+id/zapisz_samochod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:layout_below="@+id/samochod_nr_rejestracyjny"
+        android:backgroundTint="@color/pomaranczowy"
+        android:fontFamily="@font/holtwoodone"
+        android:text="Zapisz"
+        android:visibility="gone"
+        android:textColor="@color/white" />
+
+    <EditText
+        android:id="@+id/samochod_nazwa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textColor="@color/white"
+        android:textColorHint="#666"
+        android:layout_below="@+id/dodaj_samochod"
+        android:backgroundTint="@color/pomaranczowy"
+        android:hint="Nazwa samochodu"
+        android:ems="10"
+        android:visibility="gone"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/samochod_nr_rejestracyjny"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textColor="@color/white"
+        android:textColorHint="#666"
+        android:layout_below="@+id/samochod_nazwa"
+        android:backgroundTint="@color/pomaranczowy"
+        android:hint="Nr rejestracyjny"
+        android:ems="10"
+        android:visibility="gone"
+        android:inputType="numberDecimal" />
+
 
 </RelativeLayout>

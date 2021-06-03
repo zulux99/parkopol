@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -53,7 +54,7 @@ class HistoriaFragment: Fragment() {
 
                         }
                     }
-                    var arrayAdapter = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, tablicaParkowan)
+                    var arrayAdapter = ArrayAdapter(context!!, R.layout.custom_textview, tablicaParkowan)
                     listaParkowan.adapter = arrayAdapter
                 }
 
