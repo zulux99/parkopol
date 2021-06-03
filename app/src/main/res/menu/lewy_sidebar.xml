@@ -21,9 +21,9 @@
             android:icon="@drawable/ic_list"
             android:title="Historia parkowania"/>
         <item
-            android:id="@+id/nav_oplac"
-            android:icon="@drawable/ic_money"
-            android:title="Opłać zaległe"/>
+            android:id="@+id/nav_dodaj_parking"
+            android:icon="@drawable/ic_dodaj_parking"
+            android:title="Dodaj parking"/>
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"

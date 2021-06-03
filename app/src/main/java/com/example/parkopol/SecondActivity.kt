@@ -35,23 +35,18 @@ import kotlin.collections.ArrayList
 import kotlin.math.log
 
 class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-     var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
-   private var listaZaparkowan = ArrayList<Zaparkowanie>()
-   // var aktywnyZaparkowanie : Boolean=false
+    private var listaLokalizacji = ArrayList<DodajParkingFragment.MiejsceParkingowe>()
+    private var listaZaparkowan = ArrayList<Zaparkowanie>()
+
+    // var aktywnyZaparkowanie : Boolean= sprawdzZaparkowanie(FirebaseAuth.getInstance().currentUser!!.uid)
     private lateinit var drawer: DrawerLayout
     private lateinit var binding: ActivitySecondBinding
 
     //    private lateinit var fragmentKontoBinding: FragmentKontoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-
-//        val zakonczParkowanieButton = myView.findViewById(R.id.secondZakonczZaparkowanie) as Button
-//        zakonczParkowanieButton.setOnClickListener()
-//        {
-//            Toast.makeText(context, "Zakończono parkowanie", Toast.LENGTH_SHORT).show()
-//        }
-     //  val secondZakonczZaparkowanieButton = findViewById(R.id.secondZakonczZaparkowanie) as Button
-//       secondZakonczZaparkowanieButton.setOnClickListener{
-//
+//        val secondZakonczZaparkowanieButton = this.findViewById(R.id.secondZakonczZaparkowanie) as Button
+//        secondZakonczZaparkowanieButton.setOnClickListener{
+//            listaZaparkowan
 //            zmianaStanu(listaZaparkowan.last().idMiejsceParkingowe,false,listaZaparkowan.last().idZap)
 //        }
 
@@ -103,10 +98,6 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         }
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, GlownaFragment()).commit()
         navigationView.setCheckedItem(R.id.nav_glowna)
-        if (listaZaparkowan.size != 0)
-        {
-
-        }
     }
 
     override fun onRequestPermissionsResult(
@@ -194,8 +185,10 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 drawer.closeDrawer(GravityCompat.START)
                 return true
             }
-            R.id.nav_oplac -> {
-                Toast.makeText(this, "Tu wstępu nie ma :)", Toast.LENGTH_LONG).show()
+            R.id.nav_dodaj_parking -> {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, DodajParkingFragment()).commit()
+                drawer.closeDrawer(GravityCompat.START)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -203,7 +196,7 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 }
 
-fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.MiejsceParkingowe> = ArrayList()): ArrayList<KontoFragment.MiejsceParkingowe> {
+fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<DodajParkingFragment.MiejsceParkingowe> = ArrayList()): ArrayList<DodajParkingFragment.MiejsceParkingowe> {
     val database =
         FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
     database.getReference("MiejsceParkingowe/").orderByChild("lokalizacja")
@@ -212,7 +205,7 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.Miejs
                 if (dataSnapshot.exists()) {
                     for (spotLatLng: DataSnapshot in dataSnapshot.children) {
                             listaLokalizacji.add(
-                                KontoFragment.MiejsceParkingowe(
+                                DodajParkingFragment.MiejsceParkingowe(
                                     spotLatLng.child("stan").value.toString().toBoolean(),
                                     spotLatLng.child("mNiPelSprawnych").value.toString()
                                         .toBoolean(),
@@ -259,7 +252,7 @@ fun tablicaZaparkowanie( listaZaparkowan: ArrayList<Zaparkowanie> = ArrayList())
                                 spotLatLng.child("startZaparkowania").value.toString(),
                                 spotLatLng.child("koniecZaparkowania").value.toString(),
                                 spotLatLng.child("koszt").value.toString().toDouble(),
-                                 spotLatLng.key.toString()
+                                spotLatLng.key.toString()
                             )
                         )
                         Log.d("tablicaZaparkowanieKey", "${spotLatLng.key}")

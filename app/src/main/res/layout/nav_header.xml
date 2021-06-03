@@ -19,12 +19,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="Coding in Flow"
+        android:text="Imię i nazwisko"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:id="@+id/adres_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dzień dbory" />
+        android:text="E-mail" />
 </LinearLayout>

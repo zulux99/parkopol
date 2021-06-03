@@ -31,7 +31,7 @@ import kotlin.collections.ArrayList
 
 class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
     GoogleMap.OnMapClickListener {
-    private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
+    private var listaLokalizacji = ArrayList<DodajParkingFragment.MiejsceParkingowe>()
     private var mapView: MapView? = null
     private val mMarkerArray = ArrayList<Marker>()
     private var aktualnaLokalizacja = LatLng(0.0, 0.0)

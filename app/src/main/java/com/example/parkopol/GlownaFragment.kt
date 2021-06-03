@@ -51,5 +51,4 @@ class GlownaFragment : Fragment() {
         return myView
     }
 
-
 }
