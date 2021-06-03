@@ -32,18 +32,18 @@ import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var listaLokalizacji = ArrayList<KontoFragment.MiejsceParkingowe>()
     private var listaZaparkowan = ArrayList<Zaparkowanie>()
-   // var aktywnyZaparkowanie : Boolean= sprawdzZaparkowanie(FirebaseAuth.getInstance().currentUser!!.uid)
+
+    // var aktywnyZaparkowanie : Boolean= sprawdzZaparkowanie(FirebaseAuth.getInstance().currentUser!!.uid)
     private lateinit var drawer: DrawerLayout
     private lateinit var binding: ActivitySecondBinding
 
     //    private lateinit var fragmentKontoBinding: FragmentKontoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-//        val secondZaZaparkowanieButton = this.findViewById(R.id.secondZaZaparkowanie) as Button
-//        secondZaZaparkowanieButton.setOnClickListener{
+//        val secondZakonczZaparkowanieButton = this.findViewById(R.id.secondZakonczZaparkowanie) as Button
+//        secondZakonczZaparkowanieButton.setOnClickListener{
 //            listaZaparkowan
 //            zmianaStanu(listaZaparkowan.last().idMiejsceParkingowe,false,listaZaparkowan.last().idZap)
 //        }
@@ -68,10 +68,6 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             Log.d("komunikat", "google avatar url: " + signInAccount.photoUrl.toString())
             Picasso.get().load(signInAccount.photoUrl.toString()).into(headerBinding.navAvatar)
         }
-//        fragmentKontoBinding.kontoUsun.setOnClickListener {
-//            Log.d("komunikat", "listener działa")
-//            deleteUser()
-//        }
         val navigationView = binding.navView
         navigationView.bringToFront()
         navigationView.setNavigationItemSelectedListener(this)
@@ -96,9 +92,12 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 )
             }
         }
-//        KTÓRY FRAGMENT MA SIĘ WYŚWIETLAĆ NA STARCIE
-//        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, KontoFragment()).commit()
-//        navigationView.setCheckedItem(R.id.nav_konto)
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, GlownaFragment()).commit()
+        navigationView.setCheckedItem(R.id.nav_glowna)
+        if (listaZaparkowan.size != 0)
+        {
+
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -119,7 +118,7 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                         Toast.makeText(this, "Przyznano uprawnienia", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                        Toast.makeText(this, "Nie przyznano uprawnień", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Nie przyznano uprawnień", Toast.LENGTH_SHORT).show()
                 }
                 return
             }
@@ -136,6 +135,12 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.nav_glowna -> {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, GlownaFragment()).commit()
+                drawer.closeDrawer(GravityCompat.START)
+                return true
+            }
             R.id.nav_mapa -> {
                 Log.d("komunkat", "rozmiar"+ listaZaparkowan.size.toString())
                 if (!(listaZaparkowan.any { it.koniecZaparkowania == "0" })){
@@ -145,7 +150,7 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, MapaFragment()).commit()
                     drawer.closeDrawer(GravityCompat.START)
-                }else{
+                } else {
                     Log.d("komunkat", "false")
                     Toast.makeText(this, "Zaparkowałeś już", Toast.LENGTH_SHORT).show()
                 }
@@ -183,6 +188,7 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         }
     }
 }
+
 fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.MiejsceParkingowe> = ArrayList()): ArrayList<KontoFragment.MiejsceParkingowe> {
     val database =
         FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
@@ -219,6 +225,7 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.Miejs
         })
     return listaLokalizacji
 }
+
 fun tablicaZaparkowanie( listaZaparkowan: ArrayList<Zaparkowanie> = ArrayList()): ArrayList<Zaparkowanie> {
 
     Log.d("tablicaZaparkowanieKey", "1")
@@ -238,7 +245,7 @@ fun tablicaZaparkowanie( listaZaparkowan: ArrayList<Zaparkowanie> = ArrayList())
                                 spotLatLng.child("startZaparkowania").value.toString(),
                                 spotLatLng.child("koniecZaparkowania").value.toString(),
                                 spotLatLng.child("koszt").value.toString().toDouble(),
-                                 spotLatLng.key.toString()
+                                spotLatLng.key.toString()
                             )
                         )
                         Log.d("tablicaZaparkowanieKey", "${spotLatLng.key}")
@@ -246,16 +253,9 @@ fun tablicaZaparkowanie( listaZaparkowan: ArrayList<Zaparkowanie> = ArrayList())
                 }
             }
 
-        }.addOnFailureListener{
-    Log.e("firebase", "Error getting data", it)
-}
-
-
-
-
-
-
-
+        }.addOnFailureListener {
+            Log.e("firebase", "Error getting data", it)
+        }
 
 
 //        .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -319,11 +319,12 @@ data class Zaparkowanie(
 
 
 fun zmianaStanu(
-    idMParkingowego : String,
+    idMParkingowego: String,
     stan: Boolean,
     idZap: String
-){
-    val database =FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+) {
+    val database =
+        FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
 
     database.getReference("MiejsceParkingowe/").updateChildren(hashMapOf<String, Any>(
         ("/${idMParkingowego}/stan" to stan)!!
