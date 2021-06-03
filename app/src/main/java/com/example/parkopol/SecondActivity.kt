@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -138,9 +137,8 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_mapa -> {
-
-
-                if (listaZaparkowan.size==0){
+                Log.d("komunkat", "rozmiar"+ listaZaparkowan.size.toString())
+                if (!(listaZaparkowan.any { it.koniecZaparkowania == "0" })){
                     Log.d("komunkat", "true")
                     Log.d("komunkat", "rozmiar"+ listaZaparkowan.size.toString())
                     listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
@@ -170,6 +168,8 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 return true
             }
             R.id.nav_historia -> {
+
+                listaZaparkowan = tablicaZaparkowanie(listaZaparkowan)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, HistoriaFragment()).commit()
                 drawer.closeDrawer(GravityCompat.START)
@@ -191,7 +191,6 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.Miejs
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (spotLatLng: DataSnapshot in dataSnapshot.children) {
-                        if ( !spotLatLng.child("stan").value.toString().toBoolean()) {
                             listaLokalizacji.add(
                                 KontoFragment.MiejsceParkingowe(
                                     spotLatLng.child("stan").value.toString().toBoolean(),
@@ -209,7 +208,6 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.Miejs
                                     spotLatLng.key.toString()
                                 )
                             )
-                        }
                         Log.d("bazaDoTablcy", "${spotLatLng.key}")
                     }
                 }
@@ -224,8 +222,6 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<KontoFragment.Miejs
 fun tablicaZaparkowanie( listaZaparkowan: ArrayList<Zaparkowanie> = ArrayList()): ArrayList<Zaparkowanie> {
 
     Log.d("tablicaZaparkowanieKey", "1")
-
-//todo:nie wiem dlaczego fukcja wykonuje sie w chuj razy
     val database =
         FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
     database.getReference("Zaparkowanie/").get()
@@ -297,7 +293,7 @@ fun tablicaZaparkowanie( listaZaparkowan: ArrayList<Zaparkowanie> = ArrayList())
 data class Zaparkowanie(
     var idOsobyParkujacej: String = "",
     var idMiejsceParkingowe: String = "",
-    var startZaparkowania: String =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.GERMAN).format(Date()),
+    var startZaparkowania: String =  "0",
     var koniecZaparkowania: String = "0",
     var koszt: Double = 0.0,
     var idZap: String = ""
@@ -345,3 +341,4 @@ if (stan==false) {
 
 
 }
+

@@ -59,19 +59,21 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
         // listaLokalizacji.add(0, KontoFragment.MiejsceParkingowe(false,false,"wlascielkasd",LatLng(-33.1,151.2),1.8))
         for ((licznik, i) in listaLokalizacji.withIndex()) {
+            if(i.stan==false)
+            {
+                val marker = googleMap?.addMarker(
+                    MarkerOptions()
+                        .position(i.lokalizacja)
+                        .title("Wolne$licznik")
+                )
 
-            val marker = googleMap?.addMarker(
-                MarkerOptions()
-                    .position(i.lokalizacja)
-                    .title("Wolne$licznik")
-            )
-
-            if (marker != null) {
-                marker.setTag(i.idMParkingowego)
-                mMarkerArray.add(marker)
+                if (marker != null) {
+                    marker.setTag(i.idMParkingowego)
+                    mMarkerArray.add(marker)
+                }
+                builder.include(marker!!.position)
+                googleMap.setOnMarkerClickListener(this)
             }
-            builder.include(marker!!.position)
-            googleMap.setOnMarkerClickListener(this)
         }
         if (ActivityCompat.checkSelfPermission(
                 context!!.applicationContext,
