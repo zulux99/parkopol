@@ -28,16 +28,49 @@ class DodajParkingFragment : Fragment() {
         val inputOpis = myView.findViewById(R.id.kontoOpis) as EditText
         val inputCena = myView.findViewById(R.id.kontoCena) as EditText
         val nowyParkingbutton = myView.findViewById(R.id.nowyParking) as Button
-        nowyParkingbutton.setOnClickListener {
-            Log.d("komunikat", "nowyParking0")
-            nowyParking(
-                kontoLokalicacja.text.toString(),
-                niepelnosprawni.isChecked,
-                inputOpis.text.toString(),
-                //  inputCena.text.toString(),
-            )
 
-//            Log.d("t",inputCena.text.toString().toDouble().toString())
+        nowyParkingbutton.setOnClickListener {
+        var ok = true
+        val lokalicajca = LatLng(0.0,0.0)
+            if (kontoLokalicacja.text.toString().length==0){
+                ok=false
+                Toast.makeText(context, "lokalizacja jest puste", Toast.LENGTH_SHORT).show()
+            }else{
+                val partkontoLokalicacja= kontoLokalicacja.text.toString().split(",")
+                if (partkontoLokalicacja.size==1){
+                    Toast.makeText(context, "lokalizacja jest wpisana w nie prawidłowy sposób", Toast.LENGTH_SHORT).show()
+                    ok=false
+                }
+            }
+            if (inputOpis.text.toString().length==0){
+                ok=false
+                Toast.makeText(context, "opis jest puste", Toast.LENGTH_SHORT).show()
+
+            }
+
+
+            if (ok ) {
+                val opis=inputOpis.text.toString()
+                var cena  =0.0
+                if (inputCena.text.toString().length!=0){
+                    cena =inputCena.text.toString().toDouble()
+                }
+
+                 //Log.e("tablica", "lok:"+lokalicajca.toString()+" nie:"+niepelnosprawni.toString()+"opis:"+inputOpis.toString()+"opis:"+inputCena.toString())
+                val partkontoLokalicacja= kontoLokalicacja.text.toString().split(",")
+                val lokalicajca = LatLng(
+                    partkontoLokalicacja[0].toDouble(),
+                    partkontoLokalicacja[1].toDouble()
+                )
+                nowyParking(
+                    lokalicajca,
+                    niepelnosprawni.isChecked,
+                    opis,
+                    cena
+                )
+            }
+
+          // Log.d("t",inputCena.text.toString().toDouble().toString())
         }
         return myView
     }
@@ -66,30 +99,26 @@ class DodajParkingFragment : Fragment() {
     }
 
     private fun nowyParking(
-        kontoLokalicacja: String,
+        lokalicacja: LatLng,
         niepelnosprawni: Boolean,
         inputOpis: String,
-        //inputCena: String,
+        inputCena: Double,
     ) {
-        Log.e("tablica", "|"+kontoLokalicacja)
+       // Log.e("tablica", "lok:"+kontoLokalicacja.toString()+" nie:"+niepelnosprawni.toString()+"opis:"+inputOpis.toString()+"opis:"+inputCena.toString())
 
-//      val  test = Zaparkowanie("abc","idmiejsca",
-//          SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN).format(Date()),
-//           SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.GERMAN).format(Date()).plus(Calendar.HOUR),0.1
-//      )
-        //  test.dodawanieDobazy();
+
         val database =
             FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
         val myRef = database.getReference("MiejsceParkingowe")
-        val partkontoLokalicacja= kontoLokalicacja.split(",")
-        if (partkontoLokalicacja[1]==null){
-            return
-        }
-        val lokalicajca = LatLng(partkontoLokalicacja[0].toDouble(), partkontoLokalicacja[1].toDouble())
-        Log.e("tablica", "lokalicajcaja"+lokalicajca.toString())
+    //        val partkontoLokalicacja= kontoLokalicacja.split(",")
+    //        if (partkontoLokalicacja[1]==null){
+    //            return
+    //        }
+    //        val lokalicajca = LatLng(partkontoLokalicacja[0].toDouble(), partkontoLokalicacja[1].toDouble())
+        Log.e("tablica", "lokalicajcaja"+lokalicacja.toString())
         for (i in listaLokalizacji) {
             Log.d("tablica", "tablica0: ${i.idwlasciciela} ")
-            if (lokalicajca == i.lokalizacja) {
+            if (lokalicacja == i.lokalizacja) {
                 Log.e("tablica", "nie dodawanie")
                 Toast.makeText(context, "Taka Lokalizacja już istnieje", Toast.LENGTH_SHORT).show()
                 return
@@ -104,8 +133,8 @@ class DodajParkingFragment : Fragment() {
                 false,
                 niepelnosprawni,
                 FirebaseAuth.getInstance().currentUser!!.uid,
-                lokalicajca,
-                0.1,
+                lokalicacja,
+                inputCena,
                 inputOpis
             )
         )

@@ -7,25 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
-import com.example.parkopol.databinding.ActivitySecondBinding
 import com.example.parkopol.databinding.FragmentKontoBinding
-import com.example.parkopol.databinding.NavHeaderBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 class KontoFragment : Fragment() {
     private lateinit var kontoBinding: FragmentKontoBinding
@@ -62,4 +53,68 @@ class KontoFragment : Fragment() {
             Log.d("komunikat", "Nie udało się usunąć")
         }
     }
+}
+
+
+
+
+
+
+
+
+
+
+data class samochod(
+    var idWlasciciela: String="",
+    var nrRejestracyjny: String="",
+    var nazwasamochod: String="",
+    var idSamochod: String? ="",
+){
+fun dodawanieDobazy(){
+    val database =
+        FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+    val myRef = database.getReference("Zaparkowanie")
+
+    val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
+    myRef.child(id.toString()).setValue(
+        samochod(
+            FirebaseAuth.getInstance().currentUser!!.uid,
+            this.nrRejestracyjny,
+            this.nazwasamochod,
+            null
+        )
+    )
+}
+}
+
+fun tablicaSamochody( listaSamochody: ArrayList<samochod> = ArrayList()): ArrayList<samochod> {
+
+    Log.d("tablicaSamochody", "1")
+    val database =
+        FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+    database.getReference("samochod/").get()
+        .addOnSuccessListener {
+            Log.i("tablicaSamochody", "wartosci ${it.value}")
+            if (it.exists()) {
+                for (spotLatLng: DataSnapshot in it.children) {
+                    if (FirebaseAuth.getInstance().currentUser!!.uid == spotLatLng.child("idOsobyParkujacej").value.toString()) {
+                        listaSamochody.add(
+                            samochod(
+                                spotLatLng.child("idWlasciciela").value.toString(),
+                                spotLatLng.child("nrRejestracyjny").value.toString(),
+                                spotLatLng.child("nazwasamochod").value.toString(),
+                                spotLatLng.key.toString()
+
+                            )
+                        )
+                        Log.d("tablicaSamochody", "${spotLatLng.key}")
+                    }
+                }
+            }
+
+        }.addOnFailureListener {
+            Log.e("tablicaSamochody", "bląd", it)
+        }
+
+    return listaSamochody
 }
