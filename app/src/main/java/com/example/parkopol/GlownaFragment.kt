@@ -24,7 +24,7 @@ class GlownaFragment : Fragment() {
        // listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
         Log.d("glowna","lista: "+listaZaparkowan.toString())
         val myView = inflater.inflate(R.layout.fragment_glowna, container, false)
-        val zakonczParkowanieButton = myView.findViewById(R.id.secondZakonczZaparkowanie) as Button
+        val zakonczParkowanieButton = myView.findViewById(R.id.zakoncz_parkowanie) as Button
         zakonczParkowanieButton.setOnClickListener()
         {
 

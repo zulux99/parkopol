@@ -34,18 +34,17 @@ class DodajParkingFragment : Fragment() {
         val lokalicajca = LatLng(0.0,0.0)
             if (kontoLokalicacja.text.toString().length==0){
                 ok=false
-                Toast.makeText(context, "lokalizacja jest puste", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Lokalizacja jest pusta", Toast.LENGTH_SHORT).show()
             }else{
                 val partkontoLokalicacja= kontoLokalicacja.text.toString().split(",")
                 if (partkontoLokalicacja.size==1){
-                    Toast.makeText(context, "lokalizacja jest wpisana w nie prawidłowy sposób", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Lokalizacja jest wpisana w nieprawidłowy sposób", Toast.LENGTH_SHORT).show()
                     ok=false
                 }
             }
             if (inputOpis.text.toString().length==0){
                 ok=false
-                Toast.makeText(context, "opis jest puste", Toast.LENGTH_SHORT).show()
-
+                Toast.makeText(context, "Opis jest pusty", Toast.LENGTH_SHORT).show()
             }
 
 

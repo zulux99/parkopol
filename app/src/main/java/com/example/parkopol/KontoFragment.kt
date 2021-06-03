@@ -1,5 +1,6 @@
 package com.example.parkopol
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.AlertDialogLayout
 import androidx.fragment.app.Fragment
 import com.example.parkopol.databinding.FragmentKontoBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -17,6 +21,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+
 
 class KontoFragment : Fragment() {
     private lateinit var kontoBinding: FragmentKontoBinding
@@ -29,13 +34,24 @@ class KontoFragment : Fragment() {
         kontoBinding = FragmentKontoBinding.bind(myView)
         val usunKontoButton = myView.findViewById(R.id.konto_usun) as Button
         usunKontoButton.setOnClickListener {
-            Log.d("komunikat", "1")
-            deleteUser()
-            Firebase.auth.signOut()
+            val dialogClickListener =
+                DialogInterface.OnClickListener { _, which ->
+                    when (which) {
+                        DialogInterface.BUTTON_POSITIVE -> {
+                            deleteUser()
+                            Firebase.auth.signOut()
+                            Toast.makeText(context, "Twoje konto zostało usunięte", Toast.LENGTH_SHORT).show()
 //            TODO: po dwukrotnym usunięciu i zalogowaniu się crashuje
+                        }
+                        DialogInterface.BUTTON_NEGATIVE -> {
+                        }
+                    }
+                }
+            val builder = AlertDialog.Builder(context!!)
+            builder.setMessage("Czy jesteś pewny że chcesz usunąć konto?").setPositiveButton("Tak", dialogClickListener)
+                .setNegativeButton("Anuluj", dialogClickListener).show()
         }
         kontoBinding.dodajSamochod.setOnClickListener {
-            Toast.makeText(context, "Teścik", Toast.LENGTH_SHORT).show()
             if (kontoBinding.zapiszSamochod.visibility == View.GONE) {
                 kontoBinding.samochodNazwa.visibility = View.VISIBLE
                 kontoBinding.samochodNrRejestracyjny.visibility = View.VISIBLE
@@ -68,38 +84,30 @@ class KontoFragment : Fragment() {
 }
 
 
-
-
-
-
-
-
-
-
 data class samochod(
-    var idWlasciciela: String="",
-    var nrRejestracyjny: String="",
-    var nazwasamochod: String="",
-    var idSamochod: String? ="",
-){
-fun dodawanieDobazy(){
-    val database =
-        FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
-    val myRef = database.getReference("Zaparkowanie")
+    var idWlasciciela: String = "",
+    var nrRejestracyjny: String = "",
+    var nazwasamochod: String = "",
+    var idSamochod: String? = "",
+) {
+    fun dodawanieDobazy() {
+        val database =
+            FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+        val myRef = database.getReference("Zaparkowanie")
 
-    val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
-    myRef.child(id.toString()).setValue(
-        samochod(
-            FirebaseAuth.getInstance().currentUser!!.uid,
-            this.nrRejestracyjny,
-            this.nazwasamochod,
-            null
+        val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
+        myRef.child(id.toString()).setValue(
+            samochod(
+                FirebaseAuth.getInstance().currentUser!!.uid,
+                this.nrRejestracyjny,
+                this.nazwasamochod,
+                null
+            )
         )
-    )
-}
+    }
 }
 
-fun tablicaSamochody( listaSamochody: ArrayList<samochod> = ArrayList()): ArrayList<samochod> {
+fun tablicaSamochody(listaSamochody: ArrayList<samochod> = ArrayList()): ArrayList<samochod> {
 
     Log.d("tablicaSamochody", "1")
     val database =

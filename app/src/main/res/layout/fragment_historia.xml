@@ -4,10 +4,25 @@
     android:layout_height="match_parent"
     android:background="@color/tlo"
     android:id="@+id/fragment_historia">
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/holtwoodone"
+        android:text="Historia parkowania"
+        android:textColor="@color/white"
+        android:textSize="25sp" />
     <ListView
         android:id="@+id/lista_parkowan"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="20dp"
         android:divider="#aaa"
-        android:dividerHeight="1dp"
-        android:layout_height="match_parent" />
+        android:dividerHeight="1dp" >
+    </ListView>
 </RelativeLayout>
