@@ -75,10 +75,11 @@
         android:textSize="25sp" />
 
     <ListView
+        android:id="@+id/kontoListaSamochody"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
-        android:layout_below="@+id/zapisz_samochod"/>
+        android:layout_below="@+id/zapisz_samochod"
+        android:visibility="visible" />
 
     <Button
         android:id="@+id/dodaj_samochod"
@@ -117,8 +118,7 @@
         android:backgroundTint="@color/pomaranczowy"
         android:hint="Nazwa samochodu"
         android:ems="10"
-        android:visibility="gone"
-        android:inputType="numberDecimal" />
+        android:visibility="gone" />
 
     <EditText
         android:id="@+id/samochod_nr_rejestracyjny"
@@ -131,8 +131,7 @@
         android:backgroundTint="@color/pomaranczowy"
         android:hint="Nr rejestracyjny"
         android:ems="10"
-        android:visibility="gone"
-        android:inputType="numberDecimal" />
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

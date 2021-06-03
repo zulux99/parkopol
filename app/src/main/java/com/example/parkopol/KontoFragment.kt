@@ -6,7 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ListView
 import androidx.fragment.app.Fragment
 import com.example.parkopol.databinding.FragmentKontoBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -26,16 +29,22 @@ class KontoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val myView = inflater.inflate(R.layout.fragment_konto, container, false)
+        val ListaSamochody: ListView = myView.findViewById(R.id.kontoListaSamochody)
         kontoBinding = FragmentKontoBinding.bind(myView)
         val usunKontoButton = myView.findViewById(R.id.konto_usun) as Button
+        val zapisz_samochodButton = myView.findViewById(R.id.zapisz_samochod) as Button
+        val samochod_nazwaInPut = myView.findViewById(R.id.samochod_nazwa) as EditText
+        val samochod_nRejInPut = myView.findViewById(R.id.samochod_nr_rejestracyjny) as EditText
         usunKontoButton.setOnClickListener {
             Log.d("komunikat", "1")
             deleteUser()
             Firebase.auth.signOut()
 //            TODO: po dwukrotnym usunięciu i zalogowaniu się crashuje
         }
+        zapisz_samochodButton.setOnClickListener{
+            //samochod(FirebaseAuth.getInstance().currentUser!!.uid,)
+        }
         kontoBinding.dodajSamochod.setOnClickListener {
-            Toast.makeText(context, "Teścik", Toast.LENGTH_SHORT).show()
             if (kontoBinding.zapiszSamochod.visibility == View.GONE) {
                 kontoBinding.samochodNazwa.visibility = View.VISIBLE
                 kontoBinding.samochodNrRejestracyjny.visibility = View.VISIBLE
@@ -53,6 +62,10 @@ class KontoFragment : Fragment() {
             Log.d("komunikat", "google avatar url: " + signInAccount.photoUrl.toString())
             Picasso.get().load(signInAccount.photoUrl.toString()).into(kontoBinding.navAvatar)
         }
+        val tablicaSamochody = ArrayList<String>()
+        tablicaSamochody.add("Samochód test")
+        var arrayAdapter = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, tablicaSamochody)
+        ListaSamochody.adapter = arrayAdapter
         return myView
     }
 
@@ -90,7 +103,7 @@ fun dodawanieDobazy(){
     val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
     myRef.child(id.toString()).setValue(
         samochod(
-            FirebaseAuth.getInstance().currentUser!!.uid,
+            this.idWlasciciela,
             this.nrRejestracyjny,
             this.nazwasamochod,
             null
