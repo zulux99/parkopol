@@ -4,9 +4,10 @@
     android:layout_height="match_parent"
     android:background="@color/tlo"
     android:id="@+id/fragment_historia">
-
     <ListView
         android:id="@+id/lista_parkowan"
         android:layout_width="match_parent"
+        android:divider="#aaa"
+        android:dividerHeight="1dp"
         android:layout_height="match_parent" />
 </RelativeLayout>

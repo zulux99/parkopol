@@ -122,7 +122,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         }
     }
 
-
     override fun onMarkerClick(marker: Marker): Boolean {
         val btnZaparkuj = view?.findViewById(R.id.zaparkuj) as Button
         btnZaparkuj.setOnClickListener{
@@ -133,7 +132,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val intent = Intent(activity, SecondActivity::class.java)
         startActivity(intent)
         }
-
         btnZaparkuj.visibility = View.VISIBLE
         return false
     }

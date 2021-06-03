@@ -27,12 +27,24 @@ class KontoFragment : Fragment() {
     ): View? {
         val myView = inflater.inflate(R.layout.fragment_konto, container, false)
         kontoBinding = FragmentKontoBinding.bind(myView)
-        val button = myView.findViewById(R.id.konto_usun) as Button
-        button.setOnClickListener {
+        val usunKontoButton = myView.findViewById(R.id.konto_usun) as Button
+        usunKontoButton.setOnClickListener {
             Log.d("komunikat", "1")
             deleteUser()
             Firebase.auth.signOut()
 //            TODO: po dwukrotnym usunięciu i zalogowaniu się crashuje
+        }
+        kontoBinding.dodajSamochod.setOnClickListener {
+            Toast.makeText(context, "Teścik", Toast.LENGTH_SHORT).show()
+            if (kontoBinding.zapiszSamochod.visibility == View.GONE) {
+                kontoBinding.samochodNazwa.visibility = View.VISIBLE
+                kontoBinding.samochodNrRejestracyjny.visibility = View.VISIBLE
+                kontoBinding.zapiszSamochod.visibility = View.VISIBLE
+            } else {
+                kontoBinding.samochodNazwa.visibility = View.GONE
+                kontoBinding.samochodNrRejestracyjny.visibility = View.GONE
+                kontoBinding.zapiszSamochod.visibility = View.GONE
+            }
         }
         val signInAccount: GoogleSignInAccount? = GoogleSignIn.getLastSignedInAccount(context)
         if (signInAccount != null) {
