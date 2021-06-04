@@ -5,12 +5,49 @@
     android:background="@color/tlo"
     android:id="@+id/fragment_historia">
 
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textColor="#f00"
+        android:textSize="35sp"
+        android:layout_centerHorizontal="true"
+        android:text="Aktualnie parkujesz!" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView9"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="Jak długo już parkujesz"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_below="@id/textView6"
+        android:layout_centerHorizontal="true"
+        android:text="W jakim miejscu zaparkowałeś" />
+
     <Button
         android:id="@+id/zakoncz_parkowanie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/holtwoodone"
-        android:textColor="@color/white"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/textView8"
+        android:layout_centerHorizontal="true"
+        android:textSize="17sp"
         android:backgroundTint="@color/pomaranczowy"
-        android:text="Zakończ parkowanie" />
+        android:fontFamily="@font/holtwoodone"
+        android:text="Zakończ parkowanie"
+        android:textColor="@color/white" />
+
 </RelativeLayout>

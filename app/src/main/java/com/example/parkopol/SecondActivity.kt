@@ -159,8 +159,6 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                     Log.d("komunkat", "false")
                     Toast.makeText(this, "Zaparkowałeś już", Toast.LENGTH_SHORT).show()
                 }
-
-
                 return true
             }
             R.id.nav_logout -> {

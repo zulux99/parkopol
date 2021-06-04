@@ -22,7 +22,7 @@ class GlownaFragment : Fragment() {
 
         listaZaparkowan= tablicaZaparkowanie(listaZaparkowan)
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
-        Log.d("glowna","lista: "+listaZaparkowan.toString())
+        Log.d("glowna", "lista: $listaZaparkowan")
         val myView = inflater.inflate(R.layout.fragment_glowna, container, false)
         val zakonczParkowanieButton = myView.findViewById(R.id.zakoncz_parkowanie) as Button
         zakonczParkowanieButton.setOnClickListener()
@@ -34,7 +34,7 @@ class GlownaFragment : Fragment() {
                 var cena = 0.0
                 var  start = "0"
                 if (test!=null){
-                    cena=test.cena
+                    cena= test.cena!!
 
                 }
                 start=temp.startZaparkowania
@@ -49,7 +49,7 @@ class GlownaFragment : Fragment() {
                 listaZaparkowan.clear()
                 listaZaparkowan = tablicaZaparkowanie(listaZaparkowan)
               //  listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
-                Log.d("glowna", "lista: " + listaZaparkowan.toString())
+                Log.d("glowna", "lista: $listaZaparkowan")
                 val intent = Intent(activity, SecondActivity::class.java)
                 startActivity(intent)
             }else{

@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.AlertDialogLayout
 import android.widget.EditText
 import android.widget.ListView
 import androidx.fragment.app.Fragment
@@ -71,14 +70,14 @@ class KontoFragment : Fragment() {
             }
             if (samochod_nazwaInPut.text.toString().length==0){
                 ok=false
-                Toast.makeText(context, "Nazwa jest pusty", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Nazwa jest pusta", Toast.LENGTH_SHORT).show()
             }
             if(ok){
                 val samNazwa= samochod_nazwaInPut.text.toString()
                 val samRej= samochod_nRejInPut.text.toString()
                 Samochod(FirebaseAuth.getInstance().currentUser!!.uid,samRej,samNazwa,"").dodawanieDobazy()
 
-                tablicaSamochody.add(samNazwa+" "+samRej)
+                tablicaSamochody.add("$samNazwa $samRej")
                         val arrayAdapter = ArrayAdapter(context!!, R.layout.custom_textview, tablicaSamochody)
                        ListaSamochody.adapter = arrayAdapter
                 samochod_nRejInPut.setText("")
