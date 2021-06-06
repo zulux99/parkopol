@@ -16,7 +16,7 @@
         android:text="Aktualnie parkujesz!" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/secondCzasZaparkowania"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView9"
@@ -27,22 +27,22 @@
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/secondZaparkowanieOpis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:layout_below="@id/textView6"
+        android:layout_below="@id/secondCzasZaparkowania"
         android:layout_centerHorizontal="true"
         android:text="W jakim miejscu zaparkowałeś" />
 
     <Button
-        android:id="@+id/zakoncz_parkowanie"
+        android:id="@+id/secondZakonczZaparkowanie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_below="@+id/textView8"
+        android:layout_below="@+id/secondZaparkowanieOpis"
         android:layout_centerHorizontal="true"
         android:textSize="17sp"
         android:backgroundTint="@color/pomaranczowy"

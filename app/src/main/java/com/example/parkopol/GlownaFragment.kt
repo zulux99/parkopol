@@ -2,13 +2,18 @@ package com.example.parkopol
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class GlownaFragment : Fragment() {
@@ -19,12 +24,54 @@ class GlownaFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        var czas=0;
         listaZaparkowan= tablicaZaparkowanie(listaZaparkowan)
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
         Log.d("glowna", "lista: $listaZaparkowan")
         val myView = inflater.inflate(R.layout.fragment_glowna, container, false)
-        val zakonczParkowanieButton = myView.findViewById(R.id.zakoncz_parkowanie) as Button
+        val zakonczParkowanieButton = myView.findViewById(R.id.secondZakonczZaparkowanie) as Button
+
+        val secondCzasZaparkowaniaTextView = myView.findViewById(R.id.secondCzasZaparkowania) as TextView
+        val secondZaparkowanieOpisTextView = myView.findViewById(R.id.secondZaparkowanieOpis) as TextView
+        val idMP="";
+        var startZaparkowanie=""
+
+
+
+        val handler = Handler()
+        handler.postDelayed(object : Runnable {
+            override fun run() {
+                var tempczas=listaZaparkowan.findLast { it.koniecZaparkowania == "0" }
+                var x = "Brak informacji"
+                if(tempczas!=null){
+
+                    var opis= listaLokalizacji.findLast { it.idMParkingowego== tempczas.idMiejsceParkingowe}
+                    if (opis!=null){
+                        secondZaparkowanieOpisTextView.setText(opis.opis)
+                    }else{
+                        secondZaparkowanieOpisTextView.setText("Brak informacji")
+                    }
+
+                }else{
+                    secondZaparkowanieOpisTextView.setText("Brak informacji")
+                }
+                val formatter  =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN)
+
+                if (tempczas!=null){
+                    val a = formatter.parse(SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+                        Locale.GERMAN).format(Date()))
+                    val b = formatter.parse(tempczas.startZaparkowania)
+                    val tem =b!!.getTime() - a!!.getTime()
+                    x=roznicaCzas(tem)
+
+                }
+
+
+                secondCzasZaparkowaniaTextView.setText(x)
+
+                handler.postDelayed(this, 1000)
+            }
+        }, 0)
         zakonczParkowanieButton.setOnClickListener()
         {
             var temp = listaZaparkowan.findLast { it.koniecZaparkowania == "0" }
@@ -59,6 +106,7 @@ class GlownaFragment : Fragment() {
                 Toast.makeText(context, "nie zaparkowałeś", Toast.LENGTH_SHORT).show()
             }
         }
+
         return myView
     }
 
