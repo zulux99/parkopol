@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/tlo"
     android:id="@+id/fragment_historia">
 
@@ -13,7 +14,10 @@
         android:textColor="#f00"
         android:textSize="35sp"
         android:layout_centerHorizontal="true"
-        android:text="Aktualnie parkujesz!" />
+        android:text="Aktualnie parkujesz!"
+
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/secondCzasZaparkowania"
@@ -24,7 +28,9 @@
         android:layout_marginTop="15dp"
         android:text="Jak długo już parkujesz"
         android:textColor="@color/white"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/secondZaparkowanieOpis"
@@ -35,7 +41,9 @@
         android:textSize="20sp"
         android:layout_below="@id/secondCzasZaparkowania"
         android:layout_centerHorizontal="true"
-        android:text="W jakim miejscu zaparkowałeś" />
+        android:text="W jakim miejscu zaparkowałeś"
+
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/secondZakonczZaparkowanie"
@@ -48,6 +56,29 @@
         android:backgroundTint="@color/pomaranczowy"
         android:fontFamily="@font/holtwoodone"
         android:text="Zakończ parkowanie"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+
+        android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/glownaLogo"
+        android:layout_width="match_parent"
+        android:layout_height="390dp"
+        android:layout_marginBottom="100dp"
+        android:padding="20dp"
+        app:srcCompat="@drawable/logo" />
+
+    <Button
+        android:padding="20dp"
+        android:id="@+id/glownaZaparkuj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/glownaLogo"
+        android:backgroundTint="@color/pomaranczowy"
+        android:fontFamily="@font/holtwoodone"
+        android:text="Zaparkuj"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:layout_centerHorizontal="true"
+        />
 
 </RelativeLayout>
