@@ -41,14 +41,10 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         savedInstanceState: Bundle?
     ): View {
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
-        // dodowanieMarker(googleMap)
         val view: View = inflater.inflate(R.layout.fragment_mapa, container, false)
-        // Gets the MapView from the XML layout and creates it
         mapView = view.findViewById<View>(R.id.mapView) as MapView
         mapView!!.onCreate(savedInstanceState)
-        // Set the map ready callback to receive the GoogleMap object
         mapView!!.getMapAsync(this)
-//        getLastKnownLocation()
         return view
     }
 

@@ -44,7 +44,7 @@
         android:textColorHint="#666"
         android:layout_below="@+id/kontoLokalicacja"
         android:backgroundTint="@color/pomaranczowy"
-        android:hint="Cena np.: 1.50"
+        android:hint="Cena za 15 minut parkowania np.: 1.50"
         android:ems="10"
         android:inputType="numberDecimal" />
 

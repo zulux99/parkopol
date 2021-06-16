@@ -48,7 +48,7 @@ class HistoriaFragment: Fragment() {
                             if (test!=null){
                                 opis=test.opis.toString()
                             }
-                            tablicaParkowan.add(roznicaCzas(tem)+" "+spotLatLng.child("koszt").value.toString()+" zł "+opis)
+                            tablicaParkowan.add(roznicaCzas(tem)+" | "+spotLatLng.child("koszt").value.toString()+" zł | "+opis)
 
                         }
                     }
@@ -71,16 +71,16 @@ class HistoriaFragment: Fragment() {
 fun roznicaCzas(czas : Long): String {
     var wyswietl: String=""
     if (czas/1000/60<60){
-        wyswietl=(czas/1000/60).toString()+"Min"
+        wyswietl=(czas/1000/60).toString()+" Min"
         return wyswietl
 
     }else{
         if (czas/1000/60%60<10) {
             wyswietl =
-                ((czas / 1000 / 60 / 60)).toString() + "H 0" + ((czas / 1000 / 60) % 60).toString() + "Min"
+                ((czas / 1000 / 60 / 60)).toString() + "H 0" + ((czas / 1000 / 60) % 60).toString() + " Min"
         }else{
             wyswietl =
-                ((czas / 1000 / 60 / 60)).toString() + "H " + ((czas / 1000 / 60) % 60).toString() + "Min"
+                ((czas / 1000 / 60 / 60)).toString() + "H " + ((czas / 1000 / 60) % 60).toString() + " Min"
         }
     }
     return wyswietl
