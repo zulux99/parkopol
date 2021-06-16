@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -19,10 +20,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.BitmapDescriptorFactory.*
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.*
@@ -54,6 +53,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
     private var mindist = 0f
+    private var color = HUE_RED
     override fun onMapReady(googleMap: GoogleMap?) {
         googleMap?.mapType = GoogleMap.MAP_TYPE_HYBRID
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
@@ -61,15 +61,25 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         for ((licznik, i) in listaLokalizacji.withIndex()) {
             if(i.stan==false)
             {
+                val hsv = FloatArray(3)
+                Color.RGBToHSV(255, 140, 0, hsv)
+                if (i.mNiPelSprawnych == true)
+                {
+                    color = HUE_BLUE
+                }
+                else if (i.mNiPelSprawnych == false)
+                {
+                    color = hsv[0]
+                }
                 val marker = googleMap?.addMarker(
-                    MarkerOptions()
-                        .position(i.lokalizacja)
-                        .title("Wolne miejsce")
-                        .snippet(i.opis)
-                )
-
+                        MarkerOptions()
+                            .position(i.lokalizacja)
+                            .title("Wolne miejsce")
+                            .snippet(i.opis)
+                    )
                 if (marker != null) {
                     marker.setTag(i.idMParkingowego)
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(color))
                     mMarkerArray.add(marker)
                 }
                 builder.include(marker!!.position)

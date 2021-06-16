@@ -205,7 +205,7 @@ fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<DodajParkingFragmen
                             listaLokalizacji.add(
                                 DodajParkingFragment.MiejsceParkingowe(
                                     spotLatLng.child("stan").value.toString().toBoolean(),
-                                    spotLatLng.child("mNiPelSprawnych").value.toString()
+                                    spotLatLng.child("mniPelSprawnych").value.toString()
                                         .toBoolean(),
                                     spotLatLng.child("idwlasciciela").value.toString(),
                                     LatLng(
