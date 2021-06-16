@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +13,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.example.parkopol.BuildConfig.BAZADANYCHLINK
 import com.example.parkopol.databinding.ActivitySecondBinding
 import com.example.parkopol.databinding.NavHeaderBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -29,12 +27,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
-import java.io.FileInputStream
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.log
 
 class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var listaLokalizacji = ArrayList<DodajParkingFragment.MiejsceParkingowe>()
@@ -44,9 +39,9 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     private lateinit var binding: ActivitySecondBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         listaZaparkowan= tablicaZaparkowanie(listaZaparkowan)
-        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
+        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
 
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState)
         binding = ActivitySecondBinding.inflate(layoutInflater)
         val headerBinding = NavHeaderBinding.bind(binding.navView.getHeaderView(0))
 //        fragmentKontoBinding = FragmentKontoBinding.inflate(layoutInflater)
@@ -310,7 +305,7 @@ if (stan==false) {
         val b = formatter.parse(startZaparkowania)
         val tem =a!!.getTime() - b!!.getTime()
 
-        koszt=cena*(tem/ 1000 / 60/15);
+        koszt=cena*(tem/ 1000 / 60/15)
     }
     database.getReference("Zaparkowanie/").child(idZap).child("koniecZaparkowania").setValue(koniec)
     database.getReference("Zaparkowanie/").child(idZap).child("koszt").setValue(koszt)

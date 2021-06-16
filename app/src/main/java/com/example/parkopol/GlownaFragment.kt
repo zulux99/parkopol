@@ -1,10 +1,8 @@
 package com.example.parkopol
 
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
 import android.os.Handler
-import android.system.Os.bind
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +10,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import com.example.parkopol.databinding.ActivityMainBinding.bind
 import com.example.parkopol.databinding.ActivitySecondBinding
 import com.example.parkopol.databinding.FragmentGlownaBinding
-import com.example.parkopol.databinding.FragmentKontoBinding
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -34,7 +29,7 @@ class GlownaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         listaZaparkowan= tablicaZaparkowanie(listaZaparkowan)
-        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
+        listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
         Log.d("glowna", "lista: $listaZaparkowan")
         val myView = inflater.inflate(R.layout.fragment_glowna, container, false)
         val zakonczParkowanieButton = myView.findViewById(R.id.secondZakonczZaparkowanie) as Button
