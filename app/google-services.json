@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "806514245750",
+    "firebase_url": "https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "aplikacja-parkin-1620413734452",
     "storage_bucket": "aplikacja-parkin-1620413734452.appspot.com"
   },
@@ -14,19 +15,35 @@
       },
       "oauth_client": [
         {
-          "client_id": "806514245750-ap41bqdh5rspp50v1esva8o10agtf5dp.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.parkopol",
-            "certificate_hash": "a7acf28c90e07ac3079cfacc4836a6391c268102"
-          }
-        },
-        {
-          "client_id": "806514245750-h9bujtcocqbj8v8pcge4dh7mpn11c60f.apps.googleusercontent.com",
+          "client_id": "806514245750-1kjup0km45g1mg46sn011n12kc5c4geg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.parkopol",
             "certificate_hash": "02d434713c01633210cef57c1552cb248c86fefa"
+          }
+        },
+        {
+          "client_id": "806514245750-c9qeae0jqthcbcbbcgsqkdtn3c38dqkk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.parkopol",
+            "certificate_hash": "b3bfa165ec2a376a3b96256f684f058f29103f9a"
+          }
+        },
+        {
+          "client_id": "806514245750-sqqdb7csgcigod1c1htmgkttnstdmtd7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.parkopol",
+            "certificate_hash": "9311a6bf592354cb370bf656cf4b2a010d3ad708"
+          }
+        },
+        {
+          "client_id": "806514245750-u6j0m0n50ieem5bdp2o4g2ff2h5q2cb2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.parkopol",
+            "certificate_hash": "fbf5ee3371ffb8a45c649bb13adf1c16adec4218"
           }
         },
         {

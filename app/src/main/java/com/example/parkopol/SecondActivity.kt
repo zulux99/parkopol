@@ -91,7 +91,7 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 )
             } else {
                 ActivityCompat.requestPermissions(
-                    SecondActivity(),
+                    this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
                 )
             }
@@ -261,40 +261,8 @@ fun tablicaZaparkowanie( listaZaparkowan: ArrayList<Zaparkowanie> = ArrayList())
         }.addOnFailureListener {
             Log.e("firebase", "Error getting data", it)
         }
-
-
-//        .addListenerForSingleValueEvent(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    for (spotLatLng: DataSnapshot in dataSnapshot.children) {
-//                        if(FirebaseAuth.getInstance().currentUser!!.uid==spotLatLng.child("idOsobyParkujacej").value.toString()) {
-//                            tablicaZaparkowanie().add(
-//                                Zaparkowanie(
-//                                    spotLatLng.child("idMiejsceParkingowe").value.toString(),
-//                                    spotLatLng.child("idOsobyParkujacej").value.toString(),
-//                                    spotLatLng.child("koniecZaparkowania").value.toString(),
-//                                    spotLatLng.child("startZaparkowania").value.toString(),
-//                                    spotLatLng.child("koszt").value.toString().toDouble()
-//
-//                                )
-//                            )
-//                           Log.d("tablicaZaparkowanieKey", "${spotLatLng.key}")
-//                        }
-//                    }
-//                }
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//
-//            }
-//        })
     return listaZaparkowan
 }
-
-// Przyład dodawania
-//var test =Zaparkowanie("testyidOsp","idmiejscaparkingopwego", LocalDateTime.now(),
-//            LocalDateTime.now().plusHours(2),22.4);
-//    test.dodawanieDobazy()
 data class Zaparkowanie(
     var idOsobyParkujacej: String = "",
     var idMiejsceParkingowe: String = "",

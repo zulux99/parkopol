@@ -64,7 +64,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 val marker = googleMap?.addMarker(
                     MarkerOptions()
                         .position(i.lokalizacja)
-                        .title("Wolne$licznik")
+                        .title("Wolne miejsce")
+                        .snippet(i.opis)
                 )
 
                 if (marker != null) {

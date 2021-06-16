@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity() {
             super.onStart()
 // Check if user is signed in (non-null) and update UI accordingly.
             if (Firebase.auth.currentUser != null) {
-                Log.d("komunikat", "Użytkownik wciąż zalogowany")
                 val intent = Intent(this, SecondActivity::class.java)
                 startActivity(intent)
             }
@@ -57,13 +56,11 @@ class MainActivity : AppCompatActivity() {
             if (requestCode == RC_SIGN_IN) {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 try {
-                    // Google Sign In was successful, authenticate with Firebase
+// Google Sign In was successful, authenticate with Firebase
                     val account = task.getResult(ApiException::class.java)!!
-                    Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
                     firebaseAuthWithGoogle(account.idToken!!)
                 } catch (e: ApiException) {
-                    // Google Sign In failed, update UI appropriately
-                    Log.w(TAG, "Google sign in failed", e)
+// Google Sign In failed, update UI appropriately
                     Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
                 }
             }
@@ -74,13 +71,11 @@ class MainActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithCredential:success")
                         val user = auth.currentUser
                         val intent = Intent(this, SecondActivity::class.java)
                         startActivity(intent)
                     } else {
                         // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithCredential:failure", task.exception)
                         Toast.makeText(this, "signInWithCredential:failure", Toast.LENGTH_LONG).show()
                     }
                 }

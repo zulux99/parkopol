@@ -136,8 +136,7 @@ class GlownaFragment : Fragment() {
                     activity!!.supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, MapaFragment()).commit()
                     val navigationView = secondBinding.navView
-                    navigationView.setCheckedItem(R.id.nav_mapa)// TODO: nie zaznacza mapy i chuj
-//            navigationView.menu.findItem(R.id.nav_mapa).isChecked = true// TODO: w ten sposób też nie aaaaaaaaaaaaa}
+                    navigationView.setCheckedItem(R.id.nav_mapa)// TODO: nie zaznacza mapy
                 }
                 listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
             } else {
