@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.parkopol.BuildConfig.BAZADANYCHLINK
 import com.example.parkopol.databinding.ActivitySecondBinding
 import com.example.parkopol.databinding.NavHeaderBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -28,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+import java.io.FileInputStream
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
@@ -38,18 +40,9 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     private var listaLokalizacji = ArrayList<DodajParkingFragment.MiejsceParkingowe>()
     private var listaZaparkowan = ArrayList<Zaparkowanie>()
 
-    // var aktywnyZaparkowanie : Boolean= sprawdzZaparkowanie(FirebaseAuth.getInstance().currentUser!!.uid)
     private lateinit var drawer: DrawerLayout
     private lateinit var binding: ActivitySecondBinding
-
-    //    private lateinit var fragmentKontoBinding: FragmentKontoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-//        val secondZakonczZaparkowanieButton = this.findViewById(R.id.secondZakonczZaparkowanie) as Button
-//        secondZakonczZaparkowanieButton.setOnClickListener{
-//            listaZaparkowan
-//            zmianaStanu(listaZaparkowan.last().idMiejsceParkingowe,false,listaZaparkowan.last().idZap)
-//        }
-
         listaZaparkowan= tablicaZaparkowanie(listaZaparkowan)
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
 
@@ -195,8 +188,9 @@ class SecondActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 }
 
 fun tablicaMiejscaParkingowebaza(listaLokalizacji: ArrayList<DodajParkingFragment.MiejsceParkingowe> = ArrayList()): ArrayList<DodajParkingFragment.MiejsceParkingowe> {
+
     val database =
-        FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+        FirebaseDatabase.getInstance(BuildConfig.BAZADANYCHLINK)
     database.getReference("MiejsceParkingowe/").orderByChild("lokalizacja")
         .addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -235,7 +229,7 @@ fun tablicaZaparkowanie( listaZaparkowan: ArrayList<Zaparkowanie> = ArrayList())
 
     Log.d("tablicaZaparkowanieKey", "1")
     val database =
-        FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+        FirebaseDatabase.getInstance(BuildConfig.BAZADANYCHLINK)
     database.getReference("Zaparkowanie/").get()
         .addOnSuccessListener {
             Log.i("firebase", "Got value ${it.value}")
@@ -273,7 +267,7 @@ data class Zaparkowanie(
 ) {
     fun dodawanieDobazy() {
         val database =
-            FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+            FirebaseDatabase.getInstance(BuildConfig.BAZADANYCHLINK)
         val myRef = database.getReference("Zaparkowanie")
 
         val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
@@ -300,7 +294,7 @@ fun zmianaStanu(
 ) {
     Log.d("zmianaStanu","idMP: "+idMParkingowego.toString()+" stan: "+stan.toString()+" idzap: "+idZap)
     val database =
-        FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+        FirebaseDatabase.getInstance(BuildConfig.BAZADANYCHLINK)
 
     database.getReference("MiejsceParkingowe/").child(idMParkingowego).child("stan").setValue(stan)
 
@@ -309,14 +303,14 @@ if (stan==false) {
 
     val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN)
     val koniec = formatter.format(Date())
-    val start = formatter.parse(startZaparkowania)
     var koszt = 0.0
     if (cena!=0.0) {
+        val a = formatter.parse(SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+            Locale.GERMAN).format(Date()))
+        val b = formatter.parse(startZaparkowania)
+        val tem =a!!.getTime() - b!!.getTime()
 
-       // val roznica = koniec.getTime() - start.getTime()
-
-        koszt=10.2;
-        //Log.d("zmianaStanu","k"+koszt+" r:"+roznica)
+        koszt=cena*(tem/ 1000 / 60/15);
     }
     database.getReference("Zaparkowanie/").child(idZap).child("koniecZaparkowania").setValue(koniec)
     database.getReference("Zaparkowanie/").child(idZap).child("koszt").setValue(koszt)

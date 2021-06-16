@@ -25,16 +25,14 @@ class HistoriaFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Log.e("komunikatHis", "Start")
-        //listaZaparkowan= tablicaZaparkowanie(listaZaparkowan)
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji)
         val myView = inflater.inflate(R.layout.fragment_historia, container, false)
         val listaParkowan: ListView = myView.findViewById(R.id.lista_parkowan)
         val tablicaParkowan = ArrayList<String>()
         val formatter  =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN)
-        //SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.GERMAN).format(Date())
 
         val database =
-            FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+            FirebaseDatabase.getInstance(BuildConfig.BAZADANYCHLINK)
         database.getReference("Zaparkowanie/").get()
             .addOnSuccessListener {
                 if (it.exists()) {
@@ -50,7 +48,7 @@ class HistoriaFragment: Fragment() {
                             if (test!=null){
                                 opis=test.opis.toString()
                             }
-                            tablicaParkowan.add(roznicaCzas(tem)+" "+spotLatLng.child("koszt").value.toString()+" "+opis)
+                            tablicaParkowan.add(roznicaCzas(tem)+" "+spotLatLng.child("koszt").value.toString()+" zł "+opis)
 
                         }
                     }
@@ -62,9 +60,6 @@ class HistoriaFragment: Fragment() {
                 Log.e("firebase", "Error getting data", it)
             }
 
-
-        //tablicaParkowan.add("Czas Parkowanmia | Koszt | Opis")
-       // tablicaParkowan.add("czas zaparklowania,koszt,opis,")
 
         var arrayAdapter = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, tablicaParkowan)
         listaParkowan.adapter = arrayAdapter

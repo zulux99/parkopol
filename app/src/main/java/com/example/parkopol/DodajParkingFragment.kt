@@ -55,7 +55,6 @@ class DodajParkingFragment : Fragment() {
                     cena =inputCena.text.toString().toDouble()
                 }
 
-                 //Log.e("tablica", "lok:"+lokalicajca.toString()+" nie:"+niepelnosprawni.toString()+"opis:"+inputOpis.toString()+"opis:"+inputCena.toString())
                 val partkontoLokalicacja= kontoLokalicacja.text.toString().split(",")
                 val lokalicajca = LatLng(
                     partkontoLokalicacja[0].toDouble(),
@@ -69,7 +68,6 @@ class DodajParkingFragment : Fragment() {
                 )
             }
 
-          // Log.d("t",inputCena.text.toString().toDouble().toString())
         }
         return myView
     }
@@ -103,17 +101,9 @@ class DodajParkingFragment : Fragment() {
         inputOpis: String,
         inputCena: Double,
     ) {
-       // Log.e("tablica", "lok:"+kontoLokalicacja.toString()+" nie:"+niepelnosprawni.toString()+"opis:"+inputOpis.toString()+"opis:"+inputCena.toString())
-
-
         val database =
-            FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+            FirebaseDatabase.getInstance(BuildConfig.BAZADANYCHLINK)
         val myRef = database.getReference("MiejsceParkingowe")
-    //        val partkontoLokalicacja= kontoLokalicacja.split(",")
-    //        if (partkontoLokalicacja[1]==null){
-    //            return
-    //        }
-    //        val lokalicajca = LatLng(partkontoLokalicacja[0].toDouble(), partkontoLokalicacja[1].toDouble())
         Log.e("tablica", "lokalicajcaja"+lokalicacja.toString())
         for (i in listaLokalizacji) {
             Log.d("tablica", "tablica0: ${i.idwlasciciela} ")
@@ -123,10 +113,7 @@ class DodajParkingFragment : Fragment() {
                 return
             }
         }
-        Log.e("baza", "}}}}}}}}}}}}}}}}}}")
-        //myRef.setValue(miejscePar)
-        Log.e("baza", "dodaje")
-        val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
+        val id = myRef.push().key
         myRef.child(id.toString()).setValue(
             MiejsceParkingowe(
                 false,

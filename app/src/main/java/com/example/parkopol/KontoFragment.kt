@@ -108,7 +108,7 @@ class KontoFragment : Fragment() {
         }
         Log.d("tablicaSamochody", "1")
         val database =
-            FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+            FirebaseDatabase.getInstance(BuildConfig.BAZADANYCHLINK)
         database.getReference("samochod/").get()
             .addOnSuccessListener {
                 Log.i("tablicaSamochody", "wartosci ${it.value}")
@@ -169,7 +169,7 @@ data class Samochod(
 ){
 fun dodawanieDobazy(){
     val database =
-        FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+        FirebaseDatabase.getInstance(BuildConfig.BAZADANYCHLINK)
     val myRef = database.getReference("samochod")
 
     val id = myRef.push().key // tu generuje następne id tabeli miejsce parkingowe
@@ -188,7 +188,7 @@ fun tablicaSamochody( ): ArrayList<Samochod> {
     val listaSamochody: ArrayList<Samochod> = ArrayList()
     Log.d("tablicaSamochody", "1")
     val database =
-        FirebaseDatabase.getInstance("https://aplikacja-parkin-1620413734452-default-rtdb.europe-west1.firebasedatabase.app/")
+        FirebaseDatabase.getInstance(BuildConfig.BAZADANYCHLINK)
     database.getReference("samochod/").get()
         .addOnSuccessListener {
             Log.i("tablicaSamochody", "wartosci ${it.value}")

@@ -33,7 +33,6 @@ class GlownaFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var czas=0;
         listaZaparkowan= tablicaZaparkowanie(listaZaparkowan)
         listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
         Log.d("glowna", "lista: $listaZaparkowan")
@@ -44,13 +43,7 @@ class GlownaFragment : Fragment() {
         val secondCzasZaparkowaniaTextView = myView.findViewById(R.id.secondCzasZaparkowania) as TextView
         val secondZaparkowanieOpisTextView = myView.findViewById(R.id.secondZaparkowanieOpis) as TextView
         val glownaZaparkujButton = myView.findViewById(R.id.glownaZaparkuj) as Button
-
         val textView9 = myView.findViewById(R.id.textView9) as TextView
-        val idMP="";
-        var startZaparkowanie=""
-
-
-
         val handler = Handler()
         handler.postDelayed(object : Runnable {
             override fun run() {
@@ -68,9 +61,9 @@ class GlownaFragment : Fragment() {
                     }else{
                         secondZaparkowanieOpisTextView.setText("Brak informacji")
                     }
-
                 }else{
-                    secondZaparkowanieOpisTextView.setText("Brak informacji")
+                    glownaBinding.glownaLogo.visibility = View.VISIBLE
+                    glownaZaparkujButton.visibility=View.VISIBLE
                 }
                 val formatter  =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN)
 
@@ -84,10 +77,7 @@ class GlownaFragment : Fragment() {
                     textView9.visibility = View.VISIBLE
                     zakonczParkowanieButton.visibility = View.VISIBLE
                 }
-
-
                 secondCzasZaparkowaniaTextView.setText(x)
-
                 handler.postDelayed(this, 1000)
             }
         }, 0)
@@ -95,13 +85,11 @@ class GlownaFragment : Fragment() {
         {
             var temp = listaZaparkowan.findLast { it.koniecZaparkowania == "0" }
             if (temp!=null ) {
-
                 val test =  listaLokalizacji.findLast { it.idMParkingowego == temp.idMiejsceParkingowe}
                 var cena = 0.0
                 var  start = "0"
                 if (test!=null){
                     cena= test.cena!!
-
                 }
                 start=temp.startZaparkowania
                 zmianaStanu(
@@ -114,7 +102,6 @@ class GlownaFragment : Fragment() {
                 Toast.makeText(context, "Zakończono parkowanie", Toast.LENGTH_SHORT).show()
                 listaZaparkowan.clear()
                 listaZaparkowan = tablicaZaparkowanie(listaZaparkowan)
-              //  listaLokalizacji = tablicaMiejscaParkingowebaza(listaLokalizacji);
                 Log.d("glowna", "lista: $listaZaparkowan")
                 val intent = Intent(activity, SecondActivity::class.java)
                 startActivity(intent)
@@ -145,5 +132,4 @@ class GlownaFragment : Fragment() {
         }
         return myView
     }
-
 }
